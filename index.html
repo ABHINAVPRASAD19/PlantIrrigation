@@ -1,0 +1,2506 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" data-theme="green" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>HydroPulse | Autonomous Smart IoT Dual-Plant Irrigation</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Fredoka:wght@300;400;500;600;700&family=Sniglet:wght@400;800&family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: 'var(--brand-bg)',
+              surface: 'var(--card-bg-raw)',
+              cyan: 'var(--accent-glow)',
+              violet: 'var(--primary-glow)',
+              emerald: '#10b981',
+              gold: 'var(--highlight-text)'
+            }
+          },
+          fontFamily: {
+            sans: ['"Fredoka"', '"Outfit"', 'sans-serif'],
+            heading: ['"Chewy"', '"Fredoka"', 'sans-serif'],
+            cartoon: ['"Chewy"', '"Fredoka"', 'cursive', 'sans-serif'],
+            sniglet: ['"Sniglet"', '"Fredoka"', 'cursive', 'sans-serif'],
+            display: ['"Chewy"', '"Fredoka"', 'sans-serif'],
+            editorial: ['"Sniglet"', 'cursive'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            'glow-cyan': '0 0 30px -5px var(--glow-accent-rgba)',
+            'glow-violet': '0 0 35px -5px var(--glow-primary-rgba)',
+            'editorial': '0 20px 40px -15px rgba(0,0,0,0.5), 0 0 1px 1px rgba(255,255,255,0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root, [data-theme="green"] {
+      --brand-bg: #05140e;
+      --primary-glow: #10b981;
+      --accent-glow: #4ade80;
+      --accent-secondary: #22c55e;
+      --card-border: rgba(34, 197, 94, 0.24);
+      --shine-color: rgba(74, 222, 128, 0.45);
+      --card-border-hover: rgba(74, 222, 128, 0.55);
+      --card-bg: rgba(7, 24, 16, 0.82);
+      --card-bg-raw: #061911;
+      --hero-gradient-from: #4ade80;
+      --hero-gradient-to: #facc15;
+      --badge-bg: rgba(16, 185, 129, 0.15);
+      --badge-text: #86efac;
+      --button-gradient: linear-gradient(135deg, #22c55e 0%, #10b981 50%, #eab308 100%);
+      --tag-border: rgba(74, 222, 128, 0.35);
+      --highlight-text: #fde047;
+      --glow-accent-rgba: rgba(74, 222, 128, 0.38);
+      --glow-primary-rgba: rgba(16, 185, 129, 0.38);
+      --mesh-radial-1: rgba(34, 197, 94, 0.14);
+      --mesh-radial-2: rgba(234, 179, 8, 0.12);
+      --mesh-radial-3: rgba(16, 185, 129, 0.08);
+      --nav-active-bg: linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(234, 179, 8, 0.18) 100%);
+      --nav-active-border: rgba(74, 222, 128, 0.6);
+      --nav-active-shadow: 0 4px 20px -2px rgba(74, 222, 128, 0.35);
+      --flame-c1: #fef08a;
+      --flame-c2: #4ade80;
+      --flame-c3: #10b981;
+      --flame-c4: #064e3b;
+      --flame-fume: rgba(74, 222, 128, 0.32);
+      --flame-card-bg-hover: rgba(10, 31, 21, 0.95);
+    }
+
+    [data-theme="violet"] {
+      --brand-bg: #07070e;
+      --primary-glow: #8B5CF6;
+      --accent-glow: #00e5ff;
+      --accent-secondary: #a855f7;
+      --card-border: rgba(147, 112, 255, 0.2);
+      --shine-color: rgba(0, 229, 255, 0.4);
+      --card-border-hover: rgba(0, 229, 255, 0.45);
+      --card-bg: rgba(15, 14, 26, 0.78);
+      --card-bg-raw: #0e0d1a;
+      --hero-gradient-from: #38bdf8;
+      --hero-gradient-to: #c084fc;
+      --badge-bg: rgba(139, 92, 246, 0.12);
+      --badge-text: #c4b5fd;
+      --button-gradient: linear-gradient(135deg, #00d4ff 0%, #6366f1 55%, #a855f7 100%);
+      --tag-border: rgba(168, 85, 247, 0.3);
+      --highlight-text: #fbbf24;
+      --glow-accent-rgba: rgba(0, 229, 255, 0.35);
+      --glow-primary-rgba: rgba(168, 85, 247, 0.35);
+      --mesh-radial-1: rgba(0, 229, 255, 0.1);
+      --mesh-radial-2: rgba(168, 85, 247, 0.14);
+      --mesh-radial-3: rgba(56, 189, 248, 0.06);
+      --nav-active-bg: linear-gradient(135deg, rgba(0, 229, 255, 0.14) 0%, rgba(168, 85, 247, 0.16) 100%);
+      --nav-active-border: rgba(0, 229, 255, 0.5);
+      --nav-active-shadow: 0 4px 20px -2px rgba(0, 229, 255, 0.25);
+      --flame-c1: #ffffff;
+      --flame-c2: #00f0ff;
+      --flame-c3: #6366f1;
+      --flame-c4: #a855f7;
+      --flame-fume: rgba(0, 240, 255, 0.28);
+      --flame-card-bg-hover: rgba(17, 16, 32, 0.95);
+    }
+
+    [data-theme="inferno"] {
+      --brand-bg: #0c0707;
+      --primary-glow: #ff4d26;
+      --accent-glow: #ff9800;
+      --accent-secondary: #ff3333;
+      --card-border: rgba(255, 87, 34, 0.26);
+      --shine-color: rgba(255, 170, 0, 0.4);
+      --card-border-hover: rgba(255, 170, 0, 0.55);
+      --card-bg: rgba(26, 14, 16, 0.82);
+      --card-bg-raw: #1b0f12;
+      --hero-gradient-from: #ff5722;
+      --hero-gradient-to: #ffb703;
+      --badge-bg: rgba(255, 87, 34, 0.14);
+      --badge-text: #ffb074;
+      --button-gradient: linear-gradient(135deg, #ef4444 0%, #f97316 55%, #eab308 100%);
+      --tag-border: rgba(255, 112, 67, 0.35);
+      --highlight-text: #fde047;
+      --glow-accent-rgba: rgba(255, 152, 0, 0.38);
+      --glow-primary-rgba: rgba(239, 68, 68, 0.38);
+      --mesh-radial-1: rgba(239, 68, 68, 0.12);
+      --mesh-radial-2: rgba(249, 115, 22, 0.13);
+      --mesh-radial-3: rgba(234, 179, 8, 0.06);
+      --nav-active-bg: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(249, 115, 22, 0.18) 100%);
+      --nav-active-border: rgba(249, 115, 22, 0.55);
+      --nav-active-shadow: 0 4px 20px -2px rgba(249, 115, 22, 0.3);
+      --flame-c1: #fff8db;
+      --flame-c2: #ffb703;
+      --flame-c3: #fb923c;
+      --flame-c4: #b91c1c;
+      --flame-fume: rgba(251, 146, 60, 0.3);
+      --flame-card-bg-hover: rgba(30, 16, 20, 0.95);
+    }
+
+    * { cursor: none !important; }
+
+    body {
+      background-color: var(--brand-bg);
+      color: #E2E8F0;
+      font-family: 'Fredoka', 'Outfit', sans-serif;
+      overflow-x: hidden;
+      transition: background-color 0.4s ease, color 0.4s ease;
+      letter-spacing: 0.01em;
+    }
+
+    .font-cartoon { font-family: 'Chewy', 'Fredoka', cursive, sans-serif; letter-spacing: 0.03em; }
+    .font-sniglet { font-family: 'Sniglet', 'Fredoka', cursive, sans-serif; }
+
+    /* Cartoony Badges and Pills */
+    .cartoon-plant-badge {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(6, 78, 59, 0.55) 100%);
+      border: 2px solid var(--accent-glow);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4), 0 0 16px var(--glow-accent-rgba);
+      border-radius: 1.25rem;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cartoon-plant-badge:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.4), 0 0 22px var(--glow-accent-rgba);
+    }
+
+    .cartoon-day-pill {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.18) 0%, rgba(20, 83, 45, 0.45) 100%);
+      border: 2px solid rgba(250, 204, 21, 0.5);
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+      border-radius: 1rem;
+      transition: all 0.2s ease;
+    }
+    .cartoon-day-pill:hover {
+      border-color: #fde047;
+      transform: translateY(-1px);
+    }
+
+    .cartoon-btn {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border: 2px solid #34d399;
+      box-shadow: 0 3px 0 #047857;
+      border-radius: 1rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .cartoon-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 0 #047857;
+      background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+    }
+    .cartoon-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #047857;
+    }
+    .cartoon-btn:disabled, .cartoon-btn.locked {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border-color: rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25) !important;
+      color: #94a3b8 !important;
+      cursor: not-allowed !important;
+      transform: none !important;
+    }
+
+    /* Plant Catalog Image Hover Showcase */
+    .plant-image-showcase {
+      height: 110px;
+      border-radius: 1.25rem;
+      background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.18) 0%, rgba(6, 78, 59, 0.28) 100%);
+      border: 2px dashed rgba(74, 222, 128, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .group:hover .plant-image-showcase {
+      transform: scale(1.03);
+      border-color: var(--accent-glow);
+      background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.38) 0%, rgba(6, 78, 59, 0.55) 100%);
+      box-shadow: 0 0 24px -4px var(--glow-accent-rgba);
+    }
+
+    .mesh-gradient-bg {
+      background: radial-gradient(circle at 15% 15%, var(--mesh-radial-1) 0%, transparent 45%),
+                  radial-gradient(circle at 85% 25%, var(--mesh-radial-2) 0%, transparent 50%),
+                  radial-gradient(circle at 50% 85%, var(--mesh-radial-3) 0%, transparent 55%), var(--brand-bg);
+      transition: background 0.4s ease;
+    }
+
+    .glass-card {
+      position: relative;
+      background: var(--card-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--card-border);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, var(--flame-c1) 0%, var(--flame-c2) 30%, var(--flame-c3) 70%, var(--flame-c4) 100%);
+      opacity: 0;
+      z-index: -1;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      filter: blur(4px);
+    }
+
+    .glass-card::after {
+      content: '';
+      position: absolute;
+      inset: -4px -2px auto -2px;
+      height: 32px;
+      top: -16px;
+      border-radius: 9999px 9999px 0 0;
+      background: radial-gradient(ellipse at 50% 100%, var(--flame-c2) 0%, var(--flame-c3) 45%, var(--flame-fume) 80%, transparent 100%);
+      opacity: 0;
+      z-index: -1;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: blur(8px);
+    }
+
+    .glass-card:hover {
+      border-color: var(--card-border-hover) !important;
+      transform: translateY(-4px) scale(1.008);
+      background: var(--flame-card-bg-hover);
+      box-shadow: 0 16px 36px -10px var(--glow-accent-rgba), 0 0 18px -4px var(--primary-glow);
+    }
+
+    .glass-card:hover::before { opacity: 0.55; }
+    .glass-card:hover::after { opacity: 0.5; }
+    .glass-card > * { position: relative; z-index: 2; }
+
+    .tab-view { display: none; opacity: 0; transform: translateY(8px); transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
+    .tab-view.active-view { display: block; opacity: 1; transform: translateY(0); }
+
+    .nav-tab-btn {
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid transparent;
+    }
+    .nav-tab-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent-glow);
+      box-shadow: 0 0 16px -2px var(--glow-accent-rgba);
+      color: #ffffff !important;
+    }
+    .nav-tab-btn.active {
+      color: #ffffff !important;
+      background: var(--nav-active-bg) !important;
+      border: 1px solid var(--nav-active-border) !important;
+      box-shadow: var(--nav-active-shadow), 0 0 20px -2px var(--glow-accent-rgba) !important;
+    }
+
+    .theme-btn-gradient { background: var(--button-gradient) !important; }
+    .theme-hero-gradient {
+      background-image: linear-gradient(125deg, var(--hero-gradient-from), var(--highlight-text), var(--hero-gradient-to)) !important;
+    }
+
+    /* Coffee Cup Visualizer */
+    .coffee-cup-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 130px;
+      height: 145px;
+    }
+    .water-stream {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 0;
+      background: linear-gradient(180deg, #38bdf8, #00e5ff);
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.2s ease, height 0.3s ease;
+      z-index: 20;
+    }
+    .water-stream.flowing {
+      height: 52px;
+      opacity: 1;
+      box-shadow: 0 0 14px #00e5ff;
+      animation: waterFlow 0.35s infinite linear;
+    }
+    @keyframes waterFlow {
+      0% { transform: translateX(-50%) scaleY(0.9); }
+      50% { transform: translateX(-50%) scaleY(1.08); }
+      100% { transform: translateX(-50%) scaleY(0.9); }
+    }
+    .coffee-cup {
+      position: absolute;
+      bottom: 0;
+      width: 104px;
+      height: 108px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cup-rim {
+      width: 104px;
+      height: 13px;
+      background: #e2e8f0;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      z-index: 5;
+    }
+    .cup-body {
+      width: 96px;
+      height: 100px;
+      margin-top: -6px;
+      background: linear-gradient(180deg, #f1f5f9 0%, #cbd5e1 100%);
+      clip-path: polygon(4% 0%, 96% 0%, 82% 100%, 18% 100%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 6px;
+      box-shadow: inset 0 -10px 18px rgba(0,0,0,0.18);
+    }
+    .soil-layer {
+      position: absolute;
+      top: 5px;
+      width: 82px;
+      height: 36px;
+      background: #3e2723;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.4s ease;
+      z-index: 4;
+    }
+    .soil-layer.damp { background: #150d0a; }
+    .plant-foliage-icon {
+      font-size: 2.6rem;
+      margin-top: -42px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+      user-select: none;
+      transition: transform 0.25s ease;
+    }
+    .plant-card:hover .plant-foliage-icon { transform: scale(1.1); }
+    .cup-label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      z-index: 6;
+    }
+
+    /* Slider Styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid var(--accent-glow);
+      box-shadow: 0 0 10px var(--glow-accent-rgba);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    /* Card Shine */
+    @keyframes shine-sweep {
+      0% { transform: translateX(-150%) skewX(-20deg); }
+      15% { transform: translateX(200%) skewX(-20deg); }
+      100% { transform: translateX(200%) skewX(-20deg); }
+    }
+    .card-shine-container {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .card-shine {
+      position: absolute;
+      top: 0; left: 0;
+      width: 60%; height: 100%;
+      background: linear-gradient(to right, transparent, var(--shine-color), transparent);
+      transform: translateX(-150%) skewX(-20deg);
+      animation: shine-sweep 4.5s infinite;
+    }
+
+    /* Active Theme Button Glows */
+    .theme-toggle-btn {
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid transparent;
+    }
+    .theme-toggle-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    #theme-btn-green.active-theme {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.35) 0%, rgba(234, 179, 8, 0.4) 100%) !important;
+      border: 1px solid #4ade80 !important;
+      color: #fef08a !important;
+      box-shadow: 0 0 18px 2px rgba(74, 222, 128, 0.6), inset 0 0 8px rgba(250, 204, 21, 0.35) !important;
+    }
+    #theme-btn-violet.active-theme {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(0, 229, 255, 0.35) 100%) !important;
+      border: 1px solid #c084fc !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 18px 2px rgba(168, 85, 247, 0.6), inset 0 0 8px rgba(0, 229, 255, 0.35) !important;
+    }
+    #theme-btn-inferno.active-theme {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.4) 0%, rgba(249, 115, 22, 0.45) 100%) !important;
+      border: 1px solid #fb923c !important;
+      color: #fff7ed !important;
+      box-shadow: 0 0 18px 2px rgba(249, 115, 22, 0.6), inset 0 0 8px rgba(251, 146, 60, 0.35) !important;
+    }
+  </style>
+</head>
+<body class="mesh-gradient-bg min-h-screen text-slate-200 antialiased selection:bg-cyan-400 selection:text-black flex flex-col justify-between">
+
+  <!-- Interactive Background Canvas (Connecting nodes & 3D wireframe polyhedra) -->
+  <canvas id="ambient-interactive-bg" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- Cosmic Warp Canvas -->
+  <canvas id="cosmic-warp-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-0" style="display: block; opacity: 0.3;"></canvas>
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-50 w-full border-b border-white/10 bg-[#07070e]/85 backdrop-blur-2xl transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+      <!-- Logo -->
+      <button class="flex items-center gap-3.5 group text-left focus:outline-none flex-shrink-0 pr-2 transition-transform duration-300 hover:scale-[1.02]" onclick="switchTab('dashboard')">
+        <div class="relative w-11 h-11 rounded-xl overflow-hidden border border-white/15 shadow-glow-cyan/40 flex-shrink-0 bg-[#0f0e1c] flex items-center justify-center p-1.5" style="border-color: var(--card-border-hover);">
+          <span class="text-2xl">🌱</span>
+        </div>
+        <div class="flex flex-col min-w-max">
+          <div class="flex items-center gap-1.5 whitespace-nowrap">
+            <span class="font-bold text-xl tracking-tight text-white">Hydro<span class="text-transparent bg-clip-text theme-hero-gradient font-extrabold">Pulse</span></span>
+            <span class="text-xs font-editorial italic text-slate-400 font-normal">IoT</span>
+          </div>
+          <span class="text-[11px] tracking-wider font-medium transition-colors duration-300" style="color: var(--accent-glow);">
+            Smart Multi-Plant Irrigation System
+          </span>
+        </div>
+      </button>
+
+      <!-- Navigation Tabs -->
+      <nav class="hidden lg:flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.04] border border-white/10 text-sm font-medium">
+        <button class="nav-tab-btn px-4 py-2 rounded-xl hover:text-white flex items-center gap-2 active text-slate-300" id="tab-btn-dashboard" onclick="switchTab('dashboard')">
+          <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--accent-glow);"></span>
+          <span>Live</span>
+        </button>
+        <button class="nav-tab-btn px-4 py-2 rounded-xl hover:text-white text-slate-400" id="tab-btn-catalog" onclick="switchTab('catalog')">
+          <span>Plant Catalog &amp; Logic</span>
+        </button>
+        <button class="nav-tab-btn px-4 py-2 rounded-xl hover:text-white text-slate-400" id="tab-btn-hardware" onclick="switchTab('hardware')">
+          <span>ESP32 Circuit &amp; Firmware</span>
+        </button>
+        <button class="nav-tab-btn px-4 py-2 rounded-xl hover:text-white text-slate-400" id="tab-btn-demo" onclick="switchTab('demo')">
+          <span>Classroom Accelerator &amp; Logs</span>
+        </button>
+      </nav>
+
+      <!-- Theme Switcher -->
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <!-- 3 Themes: Green (Plant), Violet, Inferno -->
+        <div class="flex items-center p-1 rounded-xl bg-black/40 border border-white/15 backdrop-blur-md" id="theme-switcher-container">
+          <button class="theme-toggle-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 active-theme text-emerald-300" id="theme-btn-green" onclick="setTheme('green')" title="Botanical Green Theme (Dark Green, Light Green, Golden Yellow)">
+            <span>🌿</span><span class="hidden sm:inline">Green</span>
+          </button>
+          <button class="theme-toggle-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 hover:text-cyan-300 text-slate-400" id="theme-btn-violet" onclick="setTheme('violet')" title="Cyber Violet &amp; Blue Theme">
+            <span>⚡</span><span class="hidden sm:inline">Violet</span>
+          </button>
+          <button class="theme-toggle-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 hover:text-amber-300 text-slate-400" id="theme-btn-inferno" onclick="setTheme('inferno')" title="Solar Inferno Theme">
+            <span>🔥</span><span class="hidden sm:inline">Inferno</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Bar -->
+    <div class="flex lg:hidden border-t border-white/10 bg-[#07070e] px-4 py-2.5 gap-1.5 overflow-x-auto">
+      <button class="nav-tab-btn text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap active text-slate-300" id="mob-tab-btn-dashboard" onclick="switchTab('dashboard')">Live</button>
+      <button class="nav-tab-btn text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap text-slate-400" id="mob-tab-btn-catalog" onclick="switchTab('catalog')">Plants (7)</button>
+      <button class="nav-tab-btn text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap text-slate-400" id="mob-tab-btn-hardware" onclick="switchTab('hardware')">ESP32 &amp; Circuit</button>
+      <button class="nav-tab-btn text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap text-slate-400" id="mob-tab-btn-demo" onclick="switchTab('demo')">Demo &amp; Logs</button>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="flex-grow flex flex-col justify-start relative z-10">
+
+    <!-- ==================================================================== -->
+    <!-- VIEW 1: LIVE CONTROLLER & DASHBOARD -->
+    <!-- ==================================================================== -->
+    <section class="tab-view w-full py-8 lg:py-12 relative active-view" id="view-dashboard">
+      <!-- Ambient Glow spots -->
+      <div class="absolute top-1/4 left-8 -translate-y-1/2 w-[450px] h-[450px] rounded-full blur-[120px] pointer-events-none" style="background-color: var(--glow-accent-rgba);"></div>
+      <div class="absolute top-1/3 right-8 w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none" style="background-color: var(--glow-primary-rgba);"></div>
+
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        <!-- Simple Heading -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-5 gap-4">
+          <div>
+            <h1 class="text-3xl sm:text-4xl font-cartoon tracking-wide text-white flex items-center gap-2">
+              <span>Dual</span>
+              <span class="text-transparent bg-clip-text theme-hero-gradient text-4xl sm:text-5xl pr-2">Irrigation</span>
+            </h1>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="glass-card rounded-2xl px-4 py-2 border flex items-center gap-2.5" style="border-color: var(--card-border);">
+              <span class="text-xl">🕒</span>
+              <div>
+                <div class="text-[9px] uppercase font-bold text-slate-400">Time</div>
+                <div class="text-xs font-mono font-bold text-white" id="liveClock">00:00:00</div>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl px-4 py-2 border flex items-center gap-2.5" style="border-color: var(--card-border);">
+              <span class="text-xl">⚡</span>
+              <div>
+                <div class="text-[9px] uppercase font-bold text-slate-400">Speed</div>
+                <div class="text-xs font-mono font-bold" style="color: var(--accent-glow);" id="timeScaleText">1x (Realtime)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streamlined Environmental Bar -->
+        <div class="glass-card rounded-2xl p-3.5 sm:p-4 border flex flex-wrap items-center justify-between gap-3 text-xs" style="border-color: var(--card-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-xl" id="weatherEmoji">⛅</span>
+            <span class="font-semibold text-white" id="weatherDesc">24.5°C &bull; Sunny</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-xl">💧</span>
+            <span class="font-mono font-bold text-white" id="humidityVal">52% RH</span>
+            <span class="text-[10px] px-2 py-0.5 rounded font-mono font-semibold" style="background-color: var(--badge-bg); color: var(--accent-glow);" id="humMultBadge">1.00x</span>
+          </div>
+
+          <div class="flex items-center gap-2.5 min-w-[160px]">
+            <span class="text-xl">🌊</span>
+            <div class="flex-grow">
+              <div class="flex justify-between items-center text-[10px] mb-1">
+                <span class="text-slate-400">Reservoir: <strong class="text-white font-mono" id="reservoirLevelText">94%</strong></span>
+                <button class="hover:underline font-semibold text-emerald-400 font-cartoon" onclick="refillReservoir()">Refill</button>
+              </div>
+              <div class="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-300" id="reservoirBar" style="width: 94%; background: var(--button-gradient);"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <button class="weather-btn px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 hover:border-emerald-400/50 text-[11px] font-medium" data-weather="humid" onclick="setWeatherPreset('humid')">🌧️ 84%</button>
+            <button class="weather-btn active px-2.5 py-1 rounded-lg border border-emerald-400/50 bg-emerald-950/40 text-emerald-300 text-[11px] font-medium" data-weather="normal" onclick="setWeatherPreset('normal')">⛅ 52%</button>
+            <button class="weather-btn px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 hover:border-emerald-400/50 text-[11px] font-medium" data-weather="dry" onclick="setWeatherPreset('dry')">☀️ 28%</button>
+            <button class="px-2.5 py-1 rounded-lg text-[11px] font-semibold theme-btn-gradient text-white" onclick="fetchLiveOpenMeteo('New Delhi')">⚡ API</button>
+          </div>
+        </div>
+
+        <!-- DUAL PLANT CARDS GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- ==================== PLANT 1 CARD ==================== -->
+          <article class="glass-card plant-card rounded-3xl p-6 sm:p-7 border flex flex-col justify-between relative overflow-hidden" id="plantCard1" style="border-color: var(--card-border);">
+            <div class="space-y-5">
+              <!-- Header: Cartoon "Plant 1" + Bubbly Day Counter on the side -->
+              <div class="flex items-center justify-between border-b border-white/10 pb-3.5">
+                <div class="flex items-center gap-2">
+                  <div class="cartoon-plant-badge px-3.5 py-1.5 flex items-center gap-2 transform -rotate-1 hover:rotate-0">
+                    <span class="text-xl">🪴</span>
+                    <h2 class="text-2xl sm:text-3xl font-cartoon tracking-wide text-white drop-shadow">Plant 1</h2>
+                  </div>
+                  <div class="pump-indicator hidden items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-white/5 border border-white/10" id="pumpBadge1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500" id="pumpDot1"></span>
+                    <span id="pumpStatusText1">PUMP IDLE</span>
+                  </div>
+                </div>
+
+                <!-- Day Counter: Cartoon Pill with Set Day -->
+                <div class="flex items-center gap-2" id="dayContainer1">
+                  <div class="cartoon-day-pill px-3 py-1.5 flex items-center gap-1.5 font-cartoon text-xs">
+                    <span class="text-sm">🌱</span>
+                    <span class="text-emerald-200">Age:</span>
+                    <span class="font-bold text-white tracking-wide text-sm" id="dayDisplay1">Day 0</span>
+                  </div>
+                  <button class="cartoon-btn px-3 py-1.5 font-cartoon text-xs text-white flex items-center gap-1" id="setDayBtn1" onclick="openDayModal(1)">
+                    <span>📅</span> Set Day
+                  </button>
+                </div>
+              </div>
+
+              <!-- Unselected / Empty State (+) -->
+              <div id="emptyState1" class="py-12 px-6 flex flex-col items-center justify-center text-center rounded-2xl border-2 border-dashed border-white/10 hover:border-emerald-400/50 hover:bg-white/[0.01] transition-all cursor-pointer group" onclick="openPlantModal(1)">
+                <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/15 flex items-center justify-center text-3xl font-light text-emerald-300 group-hover:scale-110 shadow-glow-cyan transition-all mb-3">
+                  +
+                </div>
+                <div class="font-bold text-white text-base">Select Plant 1</div>
+                <p class="text-xs text-slate-400 mt-1">Tap here to choose an herb variety from the catalog</p>
+              </div>
+
+              <!-- Configured State (Hidden until chosen) -->
+              <div id="activeState1" class="hidden space-y-5">
+                <!-- Full Cover Plant Photo Box -->
+                <div id="plantPhotoBox1" class="relative w-full h-56 sm:h-64 rounded-3xl overflow-hidden border-2 border-white/15 shadow-xl group transition-all duration-300">
+                  <img id="plantPhotoMain1" src="photos/mint.png" alt="Plant 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='../photos/mint.png'; this.onerror=null;" />
+                  
+                  <!-- Gradient overlay for title & change button -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex flex-col justify-between p-5 pointer-events-none">
+                    <div class="flex justify-end pointer-events-auto">
+                      <button class="px-3.5 py-1.5 rounded-xl bg-black/60 backdrop-blur-md border border-white/20 text-xs font-cartoon text-emerald-300 hover:text-white hover:border-emerald-400 transition-all shadow-md" onclick="openPlantModal(1)">
+                        Change ▾
+                      </button>
+                    </div>
+                    
+                    <div class="pointer-events-auto">
+                      <h3 class="text-3xl sm:text-4xl font-cartoon tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]" id="plantNameTitle1">
+                        Coriander
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Next Irrigation Countdown -->
+                <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2">
+                  <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span class="font-bold uppercase tracking-wider">Next Irrigation In:</span>
+                    <span class="text-lg font-mono font-bold text-cyan-400" id="countdown1">02:45:18</span>
+                  </div>
+                  <div class="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
+                    <div class="h-full rounded-full bg-cyan-400 transition-all duration-300" id="countdownBar1" style="width: 45%;"></div>
+                  </div>
+                </div>
+
+                <!-- Collapsible Schedule Details -->
+                <div class="space-y-2">
+                  <button class="w-full py-2 px-3.5 rounded-xl bg-white/[0.02] border border-white/10 hover:bg-white/[0.06] text-xs text-slate-400 hover:text-white flex items-center justify-between transition-colors" onclick="toggleDetails(1)">
+                    <span class="flex items-center gap-1.5"><span>ℹ️</span> <span>Schedule &amp; Water Metrics</span></span>
+                    <span class="text-slate-400" id="chevron1">▾ Details</span>
+                  </button>
+                  <div id="detailsBox1" class="hidden p-3.5 rounded-xl bg-black/40 border border-white/10 space-y-2 text-xs">
+                    <div class="flex justify-between text-[11px] text-slate-400 border-b border-white/5 pb-1">
+                      <span>Dynamic Calibration</span>
+                      <span class="font-mono text-cyan-400" id="calcFormula1">(Base &times; F_age &times; F_humidity)</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center pt-1 font-mono">
+                      <div>
+                        <div class="text-[9px] uppercase text-slate-500">Burst Duration</div>
+                        <div class="text-sm font-bold text-white" id="calcBurst1">3.5s</div>
+                      </div>
+                      <div>
+                        <div class="text-[9px] uppercase text-slate-500">Frequency</div>
+                        <div class="text-sm font-bold text-white" id="calcFreq1">3x / day</div>
+                      </div>
+                      <div>
+                        <div class="text-[9px] uppercase text-slate-500">Volume</div>
+                        <div class="text-sm font-bold text-white" id="calcVol1">~52 mL</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Actions: Water Now + Test 0.5s -->
+                <div class="grid grid-cols-3 gap-3 pt-1">
+                  <button class="col-span-2 py-3 rounded-xl theme-btn-gradient text-white font-bold text-sm shadow-glow-cyan flex items-center justify-center gap-2 hover:opacity-95 active:scale-95 transition-all" onclick="triggerWatering(1, null, 'Manual Override')">
+                    <span>💦</span> Water Now
+                  </button>
+                  <button class="py-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-xs active:scale-95 transition-all" onclick="triggerWatering(1, 0.5, '0.5s Calibration')">
+                    ⚡ Test 0.5s
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ==================== PLANT 2 CARD ==================== -->
+          <article class="glass-card plant-card rounded-3xl p-6 sm:p-7 border flex flex-col justify-between relative overflow-hidden" id="plantCard2" style="border-color: var(--card-border);">
+            <div class="space-y-5">
+              <!-- Header: Cartoon "Plant 2" + Bubbly Day Counter on the side -->
+              <div class="flex items-center justify-between border-b border-white/10 pb-3.5">
+                <div class="flex items-center gap-2">
+                  <div class="cartoon-plant-badge px-3.5 py-1.5 flex items-center gap-2 transform rotate-1 hover:rotate-0">
+                    <span class="text-xl">🌿</span>
+                    <h2 class="text-2xl sm:text-3xl font-cartoon tracking-wide text-white drop-shadow">Plant 2</h2>
+                  </div>
+                  <div class="pump-indicator hidden items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-white/5 border border-white/10" id="pumpBadge2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500" id="pumpDot2"></span>
+                    <span id="pumpStatusText2">PUMP IDLE</span>
+                  </div>
+                </div>
+
+                <!-- Day Counter: Cartoon Pill with Set Day -->
+                <div class="flex items-center gap-2" id="dayContainer2">
+                  <div class="cartoon-day-pill px-3 py-1.5 flex items-center gap-1.5 font-cartoon text-xs">
+                    <span class="text-sm">🌱</span>
+                    <span class="text-emerald-200">Age:</span>
+                    <span class="font-bold text-white tracking-wide text-sm" id="dayDisplay2">Day 0</span>
+                  </div>
+                  <button class="cartoon-btn px-3 py-1.5 font-cartoon text-xs text-white flex items-center gap-1" id="setDayBtn2" onclick="openDayModal(2)">
+                    <span>📅</span> Set Day
+                  </button>
+                </div>
+              </div>
+
+              <!-- Unselected / Empty State (+) -->
+              <div id="emptyState2" class="py-12 px-6 flex flex-col items-center justify-center text-center rounded-2xl border-2 border-dashed border-white/10 hover:border-emerald-400/50 hover:bg-white/[0.01] transition-all cursor-pointer group" onclick="openPlantModal(2)">
+                <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/15 flex items-center justify-center text-3xl font-light text-emerald-300 group-hover:scale-110 shadow-glow-cyan transition-all mb-3">
+                  +
+                </div>
+                <div class="font-bold text-white text-base">Select Plant 2</div>
+                <p class="text-xs text-slate-400 mt-1">Tap here to choose an herb variety from the catalog</p>
+              </div>
+
+              <!-- Configured State (Hidden until chosen) -->
+              <div id="activeState2" class="hidden space-y-5">
+                <!-- Full Cover Plant Photo Box -->
+                <div id="plantPhotoBox2" class="relative w-full h-56 sm:h-64 rounded-3xl overflow-hidden border-2 border-white/15 shadow-xl group transition-all duration-300">
+                  <img id="plantPhotoMain2" src="photos/thyme.png" alt="Plant 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='../photos/thyme.png'; this.onerror=null;" />
+                  
+                  <!-- Gradient overlay for title & change button -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex flex-col justify-between p-5 pointer-events-none">
+                    <div class="flex justify-end pointer-events-auto">
+                      <button class="px-3.5 py-1.5 rounded-xl bg-black/60 backdrop-blur-md border border-white/20 text-xs font-cartoon text-sky-300 hover:text-white hover:border-sky-400 transition-all shadow-md" onclick="openPlantModal(2)">
+                        Change ▾
+                      </button>
+                    </div>
+                    
+                    <div class="pointer-events-auto">
+                      <h3 class="text-3xl sm:text-4xl font-cartoon tracking-wide text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]" id="plantNameTitle2">
+                        Thyme
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Next Irrigation Countdown -->
+                <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2">
+                  <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span class="font-bold uppercase tracking-wider">Next Irrigation In:</span>
+                    <span class="text-lg font-mono font-bold text-cyan-400" id="countdown2">06:12:44</span>
+                  </div>
+                  <div class="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
+                    <div class="h-full rounded-full bg-cyan-400 transition-all duration-300" id="countdownBar2" style="width: 25%;"></div>
+                  </div>
+                </div>
+
+                <!-- Collapsible Schedule Details -->
+                <div class="space-y-2">
+                  <button class="w-full py-2 px-3.5 rounded-xl bg-white/[0.02] border border-white/10 hover:bg-white/[0.06] text-xs text-slate-400 hover:text-white flex items-center justify-between transition-colors" onclick="toggleDetails(2)">
+                    <span class="flex items-center gap-1.5"><span>ℹ️</span> <span>Schedule &amp; Water Metrics</span></span>
+                    <span class="text-slate-400" id="chevron2">▾ Details</span>
+                  </button>
+                  <div id="detailsBox2" class="hidden p-3.5 rounded-xl bg-black/40 border border-white/10 space-y-2 text-xs">
+                    <div class="flex justify-between text-[11px] text-slate-400 border-b border-white/5 pb-1">
+                      <span>Dynamic Calibration</span>
+                      <span class="font-mono text-cyan-400" id="calcFormula2">(Base &times; F_age &times; F_humidity)</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center pt-1 font-mono">
+                      <div>
+                        <div class="text-[9px] uppercase text-slate-500">Burst Duration</div>
+                        <div class="text-sm font-bold text-white" id="calcBurst2">1.2s</div>
+                      </div>
+                      <div>
+                        <div class="text-[9px] uppercase text-slate-500">Frequency</div>
+                        <div class="text-sm font-bold text-white" id="calcFreq2">1x / day</div>
+                      </div>
+                      <div>
+                        <div class="text-[9px] uppercase text-slate-500">Volume</div>
+                        <div class="text-sm font-bold text-white" id="calcVol2">~6 mL</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Actions: Water Now + Test 0.5s -->
+                <div class="grid grid-cols-3 gap-3 pt-1">
+                  <button class="col-span-2 py-3 rounded-xl border border-cyan-400/50 bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 font-bold text-sm shadow-glow-cyan flex items-center justify-center gap-2 active:scale-95 transition-all" onclick="triggerWatering(2, null, 'Manual Override')">
+                    <span>💦</span> Water Now
+                  </button>
+                  <button class="py-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-xs active:scale-95 transition-all" onclick="triggerWatering(2, 0.5, '0.5s Calibration')">
+                    ⚡ Test 0.5s
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- VIEW 2: PLANT CATALOG & BOTANICAL ENGINE -->
+    <!-- ==================================================================== -->
+    <section class="tab-view w-full py-8 lg:py-12" id="view-catalog">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-white/10 pb-5 gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-cartoon uppercase tracking-wider mb-2" style="border-color: var(--tag-border); background-color: var(--badge-bg); color: var(--accent-glow);">
+              <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: var(--accent-glow);"></span>
+              <span>7 Herb Varieties</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-cartoon tracking-wide text-white">
+              Plant <span class="text-transparent bg-clip-text theme-hero-gradient">Catalog</span>
+            </h2>
+          </div>
+        </div>
+
+        <!-- Catalog Cards (All 7 varieties) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="catalogCardsGrid">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- VIEW 3: ESP32 CIRCUIT & FIRMWARE -->
+    <!-- ==================================================================== -->
+    <section class="tab-view w-full py-8 lg:py-12" id="view-hardware">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-6 gap-6">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-medium uppercase tracking-wider mb-3" style="border-color: var(--tag-border); background-color: var(--badge-bg); color: var(--accent-glow);">
+              <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--accent-glow);"></span>
+              <span>Hardware Specification &bull; ESP32 NodeMCU</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight leading-tight">
+              Circuit Schematic &amp; <span class="font-editorial italic font-normal text-transparent bg-clip-text theme-hero-gradient text-4xl sm:text-6xl pr-4">Firmware Source</span>
+            </h2>
+          </div>
+          <p class="text-slate-300 text-sm sm:text-base max-w-lg leading-relaxed">
+            Full wiring pinout, external power rail safety isolation, and complete Arduino C++ sketch ready for classroom demonstration.
+          </p>
+        </div>
+
+        <!-- Hardware Bridge Configuration -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border" style="border-color: var(--card-border);">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            <div class="md:col-span-6 space-y-3">
+              <h3 class="text-xl font-bold text-white">Live ESP32 Bridge Mode</h3>
+              <p class="text-slate-300 text-xs sm:text-sm">
+                Toggle between <strong>Simulated Mode</strong> (runs virtually in-browser with sound cues) and <strong>Connected ESP32 Mode</strong> (sends live HTTP GET commands to the physical relays over Wi-Fi).
+              </p>
+              <div class="flex gap-3">
+                <button class="px-4 py-2 rounded-xl text-xs font-bold transition-all border border-cyan-400/50 bg-cyan-950/60 text-cyan-300 shadow-glow-cyan" id="modeSimBtn" onclick="setMode('simulation')">
+                  Virtual Simulation Mode
+                </button>
+                <button class="px-4 py-2 rounded-xl text-xs font-bold transition-all border border-white/10 bg-white/5 text-slate-300 hover:text-white" id="modeHwBtn" onclick="setMode('hardware')">
+                  Physical ESP32 Mode
+                </button>
+              </div>
+            </div>
+
+            <div class="md:col-span-6 space-y-3 bg-black/40 p-4 rounded-2xl border border-white/10">
+              <div class="flex justify-between items-center text-xs font-bold text-slate-400">
+                <span>ESP32 IP Address / SoftAP</span>
+                <span class="text-[11px] font-mono text-cyan-400" id="pingStatusText">Default: 192.168.4.1</span>
+              </div>
+              <div class="flex gap-2">
+                <input type="text" id="espIpInput" value="192.168.4.1" placeholder="e.g. 192.168.1.150" class="flex-grow px-3 py-2 rounded-xl bg-white/5 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-cyan-400">
+                <button class="px-4 py-2 rounded-xl theme-btn-gradient text-white text-xs font-bold" onclick="testPingESP32()">Ping ESP32</button>
+              </div>
+              <div class="text-[11px] text-slate-400">
+                Ensure your computer is connected to the same Wi-Fi network or the ESP32's SoftAP (<code>HydroPulse-AP</code>).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Circuit Diagram & Pinout Table -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div class="lg:col-span-7 glass-card rounded-3xl p-6 sm:p-8 border space-y-4" style="border-color: var(--card-border);">
+            <h3 class="text-xl font-bold text-white">Wiring Connections Table</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left text-slate-300 border-collapse">
+                <thead>
+                  <tr class="border-b border-white/10 text-white font-mono uppercase text-[11px]">
+                    <th class="py-2.5">ESP32 Pin</th>
+                    <th class="py-2.5">2-Channel Relay</th>
+                    <th class="py-2.5">Component Controlled</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5 font-mono">
+                  <tr>
+                    <td class="py-2.5 text-cyan-400 font-bold">GPIO 32 (D32)</td>
+                    <td class="py-2.5">IN1 (Input 1)</td>
+                    <td class="py-2.5 text-white">Pump 1 (Plant 1: Mint)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 text-cyan-400 font-bold">GPIO 33 (D33)</td>
+                    <td class="py-2.5">IN2 (Input 2)</td>
+                    <td class="py-2.5 text-white">Pump 2 (Plant 2: Thyme)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 text-amber-400 font-bold">GND</td>
+                    <td class="py-2.5">GND &bull; Common Rail</td>
+                    <td class="py-2.5 text-rose-400 font-bold">CRITICAL: Common Ground</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 text-amber-400 font-bold">5V / VIN</td>
+                    <td class="py-2.5">VCC</td>
+                    <td class="py-2.5 text-white">Relay logic coil supply</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="p-4 rounded-xl border border-amber-500/30 bg-amber-950/20 text-xs text-amber-300 space-y-1">
+              <div class="font-bold flex items-center gap-2"><span>⚠️</span> Power Isolation Rule:</div>
+              <p>Do NOT connect the submersible pumps directly to the ESP32's 5V pin! Power the pumps via an external 5V power bank or adapter connected through the Relay's <code>COM</code> and <code>NO</code> contacts.</p>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 glass-card rounded-3xl p-6 sm:p-8 border space-y-4" style="border-color: var(--card-border);">
+            <h3 class="text-xl font-bold text-white">ASCII Circuit Topology</h3>
+            <pre class="p-4 rounded-2xl bg-[#090814] border border-white/10 font-mono text-[11px] text-emerald-400 leading-relaxed overflow-x-auto">+---------------------------+
+| External 5V Power Supply  |
++-------------+-------------+
+              | (+) 5V
+              v
++---------------------------+
+| Relay COM1 &amp; COM2         |
++-------------+-------------+
+    | NO1           | NO2
+    v               v
+ [Pump 1]        [Pump 2]
+    |               |
+    +-------+-------+
+            | (-) GND
+            v
++---------------------------+
+| Common Ground Rail        |
++---------------------------+
+            ^
+            | GND
++-----------+---------------+
+| ESP32 NodeMCU             |
+|   GPIO 32 ---> Relay IN1  |
+|   GPIO 33 ---> Relay IN2  |
++---------------------------+</pre>
+          </div>
+        </div>
+
+        <!-- Embedded Code Viewer with Copy Button -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border space-y-4" style="border-color: var(--card-border);">
+          <div class="flex items-center justify-between border-b border-white/10 pb-4">
+            <div>
+              <h3 class="text-xl font-bold text-white">Arduino Firmware Sketch</h3>
+              <p class="text-xs text-slate-400">File: <code>firmware/smart_irrigation_esp32.ino</code></p>
+            </div>
+            <button class="px-4 py-2 rounded-xl theme-btn-gradient text-white text-xs font-bold shadow-glow-cyan" id="copySketchBtn" onclick="copyFirmwareCode()">
+              📋 Copy Sketch Code
+            </button>
+          </div>
+          <pre class="p-5 rounded-2xl bg-[#080712] border border-white/10 font-mono text-xs text-cyan-300 max-h-96 overflow-y-auto leading-relaxed" id="sketchPre"><code id="sketchCodeText">/* Loading sketch... */</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- VIEW 4: CLASSROOM ACCELERATOR & TELEMETRY LOGS -->
+    <!-- ==================================================================== -->
+    <section class="tab-view w-full py-8 lg:py-12" id="view-demo">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-6 gap-6">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-medium uppercase tracking-wider mb-3" style="border-color: var(--tag-border); background-color: var(--badge-bg); color: var(--accent-glow);">
+              <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--accent-glow);"></span>
+              <span>Presentation Acceleration &bull; Live Telemetry</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight leading-tight">
+              Classroom Demo <span class="font-editorial italic font-normal text-transparent bg-clip-text theme-hero-gradient text-4xl sm:text-6xl pr-4">Control Center</span>
+            </h2>
+          </div>
+          <p class="text-slate-300 text-sm sm:text-base max-w-lg leading-relaxed">
+            Accelerate virtual time so judges can witness hours of irrigation intervals elapse and automatically trigger relays in seconds.
+          </p>
+        </div>
+
+        <!-- Accelerator Cards -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border space-y-6" style="border-color: var(--card-border);">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+            <div>
+              <h3 class="text-xl font-bold text-white">Select Acceleration Speed</h3>
+              <p class="text-xs text-slate-400">Controls the countdown speed for automated irrigation triggers.</p>
+            </div>
+            <button class="px-5 py-2.5 rounded-xl border border-rose-500/50 bg-rose-950/40 text-rose-300 font-bold text-xs shadow-[0_0_20px_rgba(244,63,94,0.3)] active:scale-95 transition-all" onclick="triggerWateringBoth()">
+              💦 Pulse Both Pumps Simultaneously
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <button class="speed-card-btn active p-5 rounded-2xl border border-cyan-400/50 bg-cyan-950/40 text-left transition-all" data-speed="1" onclick="setTimeScale(1)">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-lg font-bold text-white">1x Realtime</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 font-mono">1s = 1s</span>
+              </div>
+              <p class="text-xs text-slate-400">Normal operating pace for monitoring real plant growth over days.</p>
+            </button>
+
+            <button class="speed-card-btn p-5 rounded-2xl border border-white/10 bg-white/5 hover:border-cyan-400/50 text-left transition-all" data-speed="60" onclick="setTimeScale(60)">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-lg font-bold text-white">60x Speed</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 font-mono">1s = 1min</span>
+              </div>
+              <p class="text-xs text-slate-400">Great for quick classroom demonstration of interval countdowns.</p>
+            </button>
+
+            <button class="speed-card-btn p-5 rounded-2xl border border-white/10 bg-white/5 hover:border-cyan-400/50 text-left transition-all" data-speed="3600" onclick="setTimeScale(3600)">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-lg font-bold text-white">3600x Warp</span>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 font-mono">1s = 1hr</span>
+              </div>
+              <p class="text-xs text-slate-400">Watches hours melt away in seconds and triggers scheduled watering live!</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Telemetry Logs Console -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border space-y-4" style="border-color: var(--card-border);">
+          <div class="flex items-center justify-between border-b border-white/10 pb-4">
+            <div>
+              <h3 class="text-xl font-bold text-white">Live Telemetry &amp; Event Stream</h3>
+              <p class="text-xs text-slate-400">Real-time log of triggers, environmental compensations, and pump pulses.</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="px-3.5 py-1.5 rounded-xl border border-white/10 bg-white/5 text-xs text-slate-300 hover:text-white" onclick="clearLogs()">
+                🗑️ Clear
+              </button>
+              <button class="px-3.5 py-1.5 rounded-xl border border-white/10 bg-white/5 text-xs text-slate-300 hover:text-white" onclick="exportLogsToCSV()">
+                📥 Export CSV
+              </button>
+            </div>
+          </div>
+
+          <div class="h-80 overflow-y-auto rounded-2xl bg-[#090814] border border-white/10 p-4 font-mono text-xs flex flex-col-reverse gap-2" id="logsContainer">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- PLANT SELECTION MODAL -->
+    <!-- ==================================================================== -->
+    <div id="plantSelectionModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="glass-card max-w-xl w-full rounded-3xl p-6 sm:p-7 border border-white/20 shadow-2xl space-y-5">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div>
+            <div class="text-[11px] uppercase font-bold tracking-wider font-cartoon" style="color: var(--accent-glow);">Choose Herb Variety</div>
+            <h3 class="text-2xl sm:text-3xl font-cartoon tracking-wide text-white">Assign to Plant <span id="modalTargetSlotText" class="text-emerald-400">1</span></h3>
+          </div>
+          <button class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition-all" onclick="closePlantModal()">✕</button>
+        </div>
+
+        <p class="text-xs text-slate-300 leading-relaxed font-sans">
+          Select a plant from the pre-calibrated catalog. Watering bursts and frequencies will automatically calibrate for this variety's hydration profile.
+        </p>
+
+        <!-- Catalog List in Modal -->
+        <div class="max-h-80 overflow-y-auto space-y-2.5 pr-1" id="modalPlantList">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button class="px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 font-cartoon" onclick="closePlantModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- DAY INPUT / LOCK MODAL -->
+    <!-- ==================================================================== -->
+    <div id="dayInputModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="glass-card max-w-md w-full rounded-3xl p-6 sm:p-7 border border-white/20 shadow-2xl space-y-5">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div>
+            <div class="text-[11px] uppercase font-bold tracking-wider font-cartoon" style="color: var(--accent-glow);">Growth Lifecycle</div>
+            <h3 class="text-2xl font-cartoon tracking-wide text-white">Set Plant <span id="dayModalSlotText" class="text-emerald-400">1</span> Age</h3>
+          </div>
+          <button class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition-all" onclick="closeDayModal()">✕</button>
+        </div>
+
+        <div class="space-y-4 text-xs font-sans">
+          <p class="text-slate-300 leading-relaxed">
+            Specify days elapsed since planting or germination. <strong class="text-amber-300">Note:</strong> Once locked, this day cannot be changed to prevent accidental overwrites during demonstration.
+          </p>
+
+          <div class="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-3 font-cartoon">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400 font-bold uppercase text-xs">Elapsed Days:</span>
+              <input type="number" id="modalDayInput" min="0" max="90" value="1" oninput="updateDayModalPreview(this.value)" class="w-20 px-3 py-1.5 rounded-xl bg-white/5 border border-white/20 text-right font-mono font-bold text-base text-white focus:outline-none focus:border-emerald-400">
+            </div>
+
+            <div class="flex items-center justify-between text-xs pt-1 border-t border-white/5">
+              <span class="text-slate-400">Phase:</span>
+              <span class="font-bold text-emerald-300 text-sm" id="dayModalStageBadge">Seedling / Germination</span>
+            </div>
+
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-400">Water Multiplier:</span>
+              <span class="font-mono font-bold text-cyan-300" id="dayModalMultiplier">0.60x factor</span>
+            </div>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="space-y-1.5">
+            <div class="text-xs uppercase font-bold text-slate-400 font-cartoon">Quick Presets:</div>
+            <div class="grid grid-cols-3 gap-2">
+              <button class="py-1.5 px-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-xs font-cartoon text-slate-300 hover:text-white" onclick="setDayPreset(1)">Day 1 (Seed)</button>
+              <button class="py-1.5 px-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-xs font-cartoon text-slate-300 hover:text-white" onclick="setDayPreset(14)">Day 14 (Veg)</button>
+              <button class="py-1.5 px-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-xs font-cartoon text-slate-300 hover:text-white" onclick="setDayPreset(30)">Day 30 (Mature)</button>
+            </div>
+          </div>
+
+          <div class="pt-3 flex gap-3">
+            <button class="flex-1 py-3 rounded-2xl cartoon-btn text-white font-bold text-xs shadow-glow-cyan flex items-center justify-center gap-1.5 hover:opacity-95 active:scale-95 transition-all" onclick="confirmLockDay()">
+              <span>🔒</span> Confirm &amp; Lock Day
+            </button>
+            <button class="px-4 py-3 rounded-2xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 font-cartoon" onclick="closeDayModal()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 bg-[#06060b] py-8 transition-colors duration-300 relative z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+      <div class="flex items-center gap-3">
+        <span class="text-xl">🌱</span>
+        <div>
+          <span class="font-bold text-white">HydroPulse IoT</span> &bull; Smart Multi-Plant Automated Irrigation
+        </div>
+      </div>
+      <div>
+        ESP32 NodeMCU &bull; 2-Channel 5V Relay &bull; Weather-Adaptive Dynamic Schedulers
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLAME / ENERGY CURSOR -->
+  <div class="fixed top-0 left-0 pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 will-change-transform" id="flame-cursor-wrapper" style="display: block; transform: translate3d(-100px, -100px, 0px);">
+    <canvas class="absolute -top-20 -left-20 w-40 h-40 pointer-events-none" height="160" id="flame-canvas-particles" width="160"></canvas>
+    <div class="relative flex items-center justify-center transition-all duration-300" id="flame-core">
+      <div class="w-5 h-5 rounded-full blur-[6px] transition-all duration-300 opacity-80" style="background-color: var(--accent-glow);"></div>
+      <div class="absolute w-2.5 h-2.5 rounded-full transition-all duration-200" style="background-color: #ffffff; box-shadow: 0 0 12px var(--primary-glow);"></div>
+    </div>
+    <div class="absolute -inset-2 rounded-full border border-white/60 pointer-events-none opacity-0 scale-50 transition-all duration-300" id="flame-click-ring"></div>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // ========================================================================
+    // 1. PLANT CATALOG DATA
+    // ========================================================================
+    const PLANT_CATALOG = [
+      {
+        id: 'mint',
+        name: 'Mint (Peppermint)',
+        scientificName: 'Mentha piperita',
+        icon: '🍃',
+        image: 'photos/mint.png',
+        moistureProfile: 'High Moisture Need',
+        baseBurstSec: 3.5,
+        baseFrequency: 3,
+        description: 'Loves consistently moist soil. Needs frequent micro-hydration cycles.',
+        germinationDays: 7,
+        vegetativeDays: 25
+      },
+      {
+        id: 'coriander',
+        name: 'Coriander (Cilantro)',
+        scientificName: 'Coriandrum sativum',
+        icon: '🌿',
+        image: 'photos/corander.png',
+        moistureProfile: 'Moderate Moisture Need',
+        baseBurstSec: 2.5,
+        baseFrequency: 3,
+        description: 'Fast-growing herb requiring steady, moderate moisture to prevent premature bolting.',
+        germinationDays: 8,
+        vegetativeDays: 28
+      },
+      {
+        id: 'basil',
+        name: 'Sweet Basil',
+        scientificName: 'Ocimum basilicum',
+        icon: '🌱',
+        image: 'photos/basil.png',
+        moistureProfile: 'Moderate Moisture Need',
+        baseBurstSec: 2.5,
+        baseFrequency: 2,
+        description: 'Thrives with regular topsoil dampness, but dislikes waterlogged root systems.',
+        germinationDays: 6,
+        vegetativeDays: 24
+      },
+      {
+        id: 'fenugreek',
+        name: 'Fenugreek (Methi)',
+        scientificName: 'Trigonella foenum-graecum',
+        icon: '☘️',
+        image: 'photos/fenugreek.png',
+        moistureProfile: 'Moderate Moisture Need',
+        baseBurstSec: 2.2,
+        baseFrequency: 2,
+        description: 'Extremely fast germination (2-3 days). High moisture in seedling, tapering later.',
+        germinationDays: 4,
+        vegetativeDays: 20
+      },
+      {
+        id: 'parsley',
+        name: 'Flat-Leaf Parsley',
+        scientificName: 'Petroselinum crispum',
+        icon: '🥬',
+        image: 'photos/parsley.png',
+        moistureProfile: 'Moderate-High Need',
+        baseBurstSec: 3.0,
+        baseFrequency: 2,
+        description: 'Slow germination, requires steady moisture during initial 3 weeks of growth.',
+        germinationDays: 12,
+        vegetativeDays: 32
+      },
+      {
+        id: 'thyme',
+        name: 'Thyme',
+        scientificName: 'Thymus vulgaris',
+        icon: '🌾',
+        image: 'photos/thyme.png',
+        moistureProfile: 'Low Moisture Need',
+        baseBurstSec: 2.0,
+        baseFrequency: 1,
+        description: 'Mediterranean native. Prefers drier soil; highly susceptible to overwatering.',
+        germinationDays: 14,
+        vegetativeDays: 35
+      },
+      {
+        id: 'ajwain',
+        name: 'Ajwain (Carom)',
+        scientificName: 'Trachyspermum ammi',
+        icon: '🪴',
+        image: 'photos/ajwain.png',
+        moistureProfile: 'Low Moisture Need',
+        baseBurstSec: 2.0,
+        baseFrequency: 1,
+        description: 'Hardy succulent-like herb. Drought-tolerant with minimal watering needs.',
+        germinationDays: 7,
+        vegetativeDays: 30
+      }
+    ];
+
+    const PUMP_FLOW_RATE_ML_PER_SEC = 5.0; // flow through mini drip nozzle
+
+    // ========================================================================
+    // 2. STATE
+    // ========================================================================
+    const state = {
+      theme: 'green',
+      mode: 'simulation', // 'simulation' or 'hardware'
+      espIp: '192.168.4.1',
+      timeScale: 1,
+
+      weatherPreset: 'normal',
+      humidity: 52,
+      temperature: 24.5,
+      weatherDesc: 'Sunny • Moderate',
+      stationName: 'Demo Station (Preset)',
+
+      reservoirCapacityMl: 500,
+      reservoirCurrentMl: 470,
+
+      plants: {
+        1: {
+          id: 1,
+          selectedPlantId: null,
+          growthDay: 0,
+          dayLocked: false,
+          countdownSec: 0,
+          intervalTotalSec: 24 * 3600,
+          isPumping: false,
+          pumpTimer: null
+        },
+        2: {
+          id: 2,
+          selectedPlantId: null,
+          growthDay: 0,
+          dayLocked: false,
+          countdownSec: 0,
+          intervalTotalSec: 24 * 3600,
+          isPumping: false,
+          pumpTimer: null
+        }
+      },
+
+      logs: []
+    };
+
+    // ========================================================================
+    // 3. SOUND SYNTHESIZER (Web Audio API)
+    // ========================================================================
+    class SoundFX {
+      constructor() { this.ctx = null; }
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+      }
+      playBeep(isStart = true) {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = isStart ? 'sine' : 'triangle';
+          osc.frequency.setValueAtTime(isStart ? 659.25 : 440, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.16);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.16);
+        } catch(e) {}
+      }
+    }
+    const sfx = new SoundFX();
+
+    // ========================================================================
+    // 4. COMPUTATION LOGIC
+    // ========================================================================
+    function calculateAgeFactor(day) {
+      if (day <= 7) return { factor: 0.60, stageName: 'Seedling / Germination' };
+      if (day <= 25) return { factor: 1.00, stageName: 'Vegetative Growth' };
+      return { factor: 1.25, stageName: 'Mature / Flowering' };
+    }
+
+    function calculateHumidityFactor(humidity) {
+      if (humidity > 75) return { factor: 0.70, desc: 'High RH (>75%) -30%' };
+      if (humidity < 40) return { factor: 1.30, desc: 'Dry RH (<40%) +30%' };
+      return { factor: 1.00, desc: 'Standard RH' };
+    }
+
+    function computePlantSchedule(pId) {
+      const p = state.plants[pId];
+      const plant = PLANT_CATALOG.find(x => x.id === p.selectedPlantId) || PLANT_CATALOG[0];
+      const age = calculateAgeFactor(p.growthDay);
+      const hum = calculateHumidityFactor(state.humidity);
+
+      const effectiveBurst = +(plant.baseBurstSec * age.factor * hum.factor).toFixed(1);
+      const dailyFreq = plant.baseFrequency;
+      const intervalSec = Math.round((24 * 3600) / dailyFreq);
+      const volPerBurst = +(effectiveBurst * PUMP_FLOW_RATE_ML_PER_SEC).toFixed(1);
+      const volDaily = +(volPerBurst * dailyFreq).toFixed(1);
+
+      return {
+        plant,
+        ageFactor: age.factor,
+        stageName: age.stageName,
+        humFactor: hum.factor,
+        effectiveBurst,
+        dailyFreq,
+        intervalSec,
+        volPerBurst,
+        volDaily
+      };
+    }
+
+    // ========================================================================
+    // 5. UI UPDATES
+    // ========================================================================
+    function updatePlantUI(pId) {
+      const p = state.plants[pId];
+      if (!p || !p.selectedPlantId) return;
+
+      const sched = computePlantSchedule(pId);
+
+      const iconEl = document.getElementById(`plantIcon${pId}`);
+      if (iconEl) iconEl.textContent = sched.plant.icon;
+
+      const cupLabelEl = document.getElementById(`cupLabel${pId}`);
+      if (cupLabelEl) cupLabelEl.textContent = `${sched.plant.name.split(' ')[0]} (Plant ${pId})`;
+
+      const titleEl = document.getElementById(`plantNameTitle${pId}`);
+      if (titleEl) {
+        titleEl.textContent = sched.plant.name.replace(/\s*\([^)]*\)/g, '').trim();
+      }
+
+      const photoMain = document.getElementById(`plantPhotoMain${pId}`);
+      if (photoMain && sched.plant.image) {
+        photoMain.src = sched.plant.image;
+        photoMain.alt = sched.plant.name;
+      }
+
+      const stageEl = document.getElementById(`stageBadge${pId}`);
+      if (stageEl) stageEl.textContent = sched.stageName;
+
+      const moistureEl = document.getElementById(`moistureBadge${pId}`);
+      if (moistureEl) moistureEl.textContent = sched.plant.moistureProfile;
+
+      const burstEl = document.getElementById(`calcBurst${pId}`);
+      if (burstEl) burstEl.textContent = `${sched.effectiveBurst}s`;
+
+      const formulaEl = document.getElementById(`calcFormula${pId}`);
+      if (formulaEl) formulaEl.textContent = `(Base ${sched.plant.baseBurstSec}s × ${sched.ageFactor} × ${sched.humFactor})`;
+
+      const freqEl = document.getElementById(`calcFreq${pId}`);
+      if (freqEl) freqEl.textContent = `${sched.dailyFreq}x / day`;
+
+      const volEl = document.getElementById(`calcVol${pId}`);
+      if (volEl) volEl.textContent = `~${sched.volDaily} mL`;
+    }
+
+    function updateEnvironmentUI() {
+      const wEmoji = document.getElementById('weatherEmoji');
+      if (wEmoji) wEmoji.textContent = state.weatherPreset === 'humid' ? '🌧️' : (state.weatherPreset === 'dry' ? '☀️' : '⛅');
+      
+      const wDesc = document.getElementById('weatherDesc');
+      if (wDesc) wDesc.textContent = state.weatherDesc;
+      
+      const humVal = document.getElementById('humidityVal');
+      if (humVal) humVal.textContent = `${state.humidity}% RH`;
+
+      const hum = calculateHumidityFactor(state.humidity);
+      const humBadge = document.getElementById('humMultBadge');
+      if (humBadge) humBadge.textContent = `${hum.factor.toFixed(2)}x`;
+
+      const pct = Math.max(0, Math.round((state.reservoirCurrentMl / state.reservoirCapacityMl) * 100));
+      const resText = document.getElementById('reservoirLevelText');
+      if (resText) resText.textContent = `${pct}%`;
+      
+      const resBar = document.getElementById('reservoirBar');
+      if (resBar) resBar.style.width = `${pct}%`;
+
+      updatePlantUI(1);
+      updatePlantUI(2);
+    }
+
+    // ========================================================================
+    // 5B. PLANT PICKER & DAY MODALS & DETAILS ACCORDION
+    // ========================================================================
+    let currentModalSlot = 1;
+    let currentDayModalSlot = 1;
+
+    function renderModalPlantList() {
+      const container = document.getElementById('modalPlantList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      PLANT_CATALOG.forEach(plant => {
+        const item = document.createElement('div');
+        item.className = 'p-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-emerald-400/50 transition-all cursor-pointer flex items-center justify-between group';
+        item.onclick = () => selectPlantForSlot(plant.id);
+
+        item.innerHTML = `
+          <div class="flex items-center gap-3.5">
+            <div class="w-14 h-14 rounded-2xl overflow-hidden border-2 border-white/15 group-hover:border-emerald-400 shadow-md flex-shrink-0 relative bg-black/50">
+              <img src="${plant.image}" alt="${plant.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" onerror="this.src='../${plant.image}'; this.onerror=null;" />
+              <span class="absolute bottom-0 right-0 text-xs bg-black/75 rounded-tl-lg px-1">${plant.icon}</span>
+            </div>
+            <div>
+              <div class="font-cartoon text-lg text-white group-hover:text-emerald-300 transition-colors flex items-center gap-2">
+                <span>${plant.name}</span>
+                <span class="text-[10px] font-sans font-normal px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-300">${plant.moistureProfile.replace(' Need', '')}</span>
+              </div>
+              <div class="text-xs text-slate-400 line-clamp-1">${plant.description}</div>
+            </div>
+          </div>
+          <button class="cartoon-btn px-4 py-2 text-xs font-cartoon text-white flex-shrink-0 group-hover:scale-105 transition-all">
+            Select
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function openPlantModal(slotId) {
+      currentModalSlot = slotId;
+      const targetText = document.getElementById('modalTargetSlotText');
+      if (targetText) targetText.textContent = slotId;
+      const modal = document.getElementById('plantSelectionModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closePlantModal() {
+      const modal = document.getElementById('plantSelectionModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function selectPlantForSlot(plantId) {
+      const slotId = currentModalSlot;
+      state.plants[slotId].selectedPlantId = plantId;
+      const sched = computePlantSchedule(slotId);
+      state.plants[slotId].countdownSec = sched.intervalSec;
+      state.plants[slotId].intervalTotalSec = sched.intervalSec;
+
+      const emptyEl = document.getElementById(`emptyState${slotId}`);
+      const activeEl = document.getElementById(`activeState${slotId}`);
+      if (emptyEl) emptyEl.classList.add('hidden');
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      updatePlantUI(slotId);
+      addLog(`🌱 Plant ${slotId} variety selected: ${sched.plant.name}`, 'system');
+      closePlantModal();
+    }
+
+    function openDayModal(slotId) {
+      if (state.plants[slotId].dayLocked) return;
+      currentDayModalSlot = slotId;
+      const targetText = document.getElementById('dayModalSlotText');
+      if (targetText) targetText.textContent = slotId;
+
+      const currentVal = state.plants[slotId].growthDay || 1;
+      const input = document.getElementById('modalDayInput');
+      if (input) input.value = currentVal;
+      updateDayModalPreview(currentVal);
+
+      const modal = document.getElementById('dayInputModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeDayModal() {
+      const modal = document.getElementById('dayInputModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function updateDayModalPreview(dayVal) {
+      const d = parseInt(dayVal, 10) || 0;
+      const age = calculateAgeFactor(d);
+      const stageEl = document.getElementById('dayModalStageBadge');
+      if (stageEl) stageEl.textContent = age.stageName;
+      const multEl = document.getElementById('dayModalMultiplier');
+      if (multEl) multEl.textContent = `${age.factor.toFixed(2)}x factor`;
+    }
+
+    function setDayPreset(day) {
+      const input = document.getElementById('modalDayInput');
+      if (input) {
+        input.value = day;
+        updateDayModalPreview(day);
+      }
+    }
+
+    function confirmLockDay() {
+      const slotId = currentDayModalSlot;
+      const input = document.getElementById('modalDayInput');
+      const day = Math.max(0, Math.min(90, parseInt(input.value, 10) || 0));
+
+      state.plants[slotId].growthDay = day;
+      state.plants[slotId].dayLocked = true;
+
+      const dayDisp = document.getElementById(`dayDisplay${slotId}`);
+      if (dayDisp) dayDisp.textContent = `Day ${day}`;
+
+      const btn = document.getElementById(`setDayBtn${slotId}`);
+      if (btn) {
+        btn.innerHTML = '<span>🔒</span> Locked';
+        btn.disabled = true;
+        btn.classList.add('locked');
+      }
+
+      updatePlantUI(slotId);
+      addLog(`📅 Plant ${slotId} lifecycle locked at Day ${day} (${calculateAgeFactor(day).stageName})`, 'system');
+      closeDayModal();
+    }
+
+    function toggleDetails(slotId) {
+      const box = document.getElementById(`detailsBox${slotId}`);
+      const chev = document.getElementById(`chevron${slotId}`);
+      if (!box || !chev) return;
+      const isHidden = box.classList.contains('hidden');
+      if (isHidden) {
+        box.classList.remove('hidden');
+        chev.textContent = '▴ Hide';
+      } else {
+        box.classList.add('hidden');
+        chev.textContent = '▾ Details';
+      }
+    }
+
+    // ========================================================================
+    // 6. IRRIGATION TRIGGER & ESP32 BRIDGE
+    // ========================================================================
+    async function triggerWatering(pId, durationSec = null, reason = 'Manual') {
+      const p = state.plants[pId];
+      if (!p.selectedPlantId) {
+        openPlantModal(pId);
+        return;
+      }
+      if (p.isPumping) return;
+
+      const sched = computePlantSchedule(pId);
+      const actualDuration = durationSec !== null ? durationSec : sched.effectiveBurst;
+      const waterVol = +(actualDuration * PUMP_FLOW_RATE_ML_PER_SEC).toFixed(1);
+
+      if (state.reservoirCurrentMl <= 0) {
+        addLog(`⚠️ Cannot water Plant ${pId}: Reservoir empty!`, 'alert');
+        alert('Water reservoir is empty! Click Refill.');
+        return;
+      }
+
+      state.reservoirCurrentMl = Math.max(0, +(state.reservoirCurrentMl - waterVol).toFixed(1));
+      updateEnvironmentUI();
+
+      p.isPumping = true;
+      sfx.playBeep(true);
+
+      const stream = document.getElementById(`stream${pId}`);
+      const soil = document.getElementById(`soil${pId}`);
+      const photoBox = document.getElementById(`plantPhotoBox${pId}`);
+      const dot = document.getElementById(`pumpDot${pId}`);
+      const txt = document.getElementById(`pumpStatusText${pId}`);
+      const badge = document.getElementById(`pumpBadge${pId}`);
+
+      if (stream) stream.classList.add('flowing');
+      if (soil) soil.classList.add('damp');
+      if (photoBox) photoBox.classList.add('ring-4', 'ring-emerald-400', 'shadow-[0_0_35px_rgba(52,211,153,0.7)]');
+      if (dot) {
+        dot.className = 'w-2 h-2 rounded-full animate-ping';
+        dot.style.backgroundColor = 'var(--accent-glow)';
+      }
+      if (badge) badge.style.borderColor = 'var(--accent-glow)';
+      if (txt) {
+        txt.textContent = `PUMP ACTIVE (${actualDuration}s)`;
+        txt.style.color = 'var(--accent-glow)';
+      }
+
+      addLog(`💦 Pump ${pId} Activated: ${actualDuration}s (~${waterVol}mL) for ${sched.plant.name} [${reason}]`, pId === 1 ? 'p1' : 'p2');
+
+      // Reset countdown
+      p.countdownSec = sched.intervalSec;
+      p.intervalTotalSec = sched.intervalSec;
+
+      if (state.mode === 'hardware') {
+        try {
+          fetch(`http://${state.espIp}/water?pump=${pId}&duration=${actualDuration}`, { signal: AbortSignal.timeout(2000) });
+        } catch(e) {}
+      }
+
+      clearTimeout(p.pumpTimer);
+      p.pumpTimer = setTimeout(() => {
+        p.isPumping = false;
+        if (stream) stream.classList.remove('flowing');
+        if (soil) setTimeout(() => soil.classList.remove('damp'), 8000);
+        if (photoBox) photoBox.classList.remove('ring-4', 'ring-emerald-400', 'shadow-[0_0_35px_rgba(52,211,153,0.7)]');
+        if (dot) {
+          dot.className = 'w-2 h-2 rounded-full bg-slate-500';
+          dot.style.backgroundColor = '';
+        }
+        if (badge) badge.style.borderColor = '';
+        if (txt) {
+          txt.textContent = 'PUMP IDLE';
+          txt.style.color = '';
+        }
+        sfx.playBeep(false);
+      }, actualDuration * 1000);
+    }
+
+    function triggerWateringBoth() {
+      triggerWatering(1, null, 'Demo Both');
+      setTimeout(() => triggerWatering(2, null, 'Demo Both'), 400);
+    }
+
+    function refillReservoir() {
+      state.reservoirCurrentMl = state.reservoirCapacityMl;
+      addLog('🌊 Water reservoir refilled to 100% (500 mL)', 'system');
+      updateEnvironmentUI();
+    }
+
+    // ========================================================================
+    // 7. TIME ENGINE & DEMO ACCELERATOR
+    // ========================================================================
+    function setTimeScale(scale) {
+      state.timeScale = scale;
+      document.querySelectorAll('.speed-card-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.speed, 10) === scale);
+        btn.classList.toggle('border-cyan-400/50', parseInt(btn.dataset.speed, 10) === scale);
+        btn.classList.toggle('bg-cyan-950/40', parseInt(btn.dataset.speed, 10) === scale);
+      });
+      document.getElementById('timeScaleText').textContent = 
+        scale === 1 ? '1x (Realtime)' : `${scale}x Demo Speed`;
+      addLog(`⚡ Acceleration set to ${scale}x speed`, 'system');
+    }
+
+    function formatHMS(sec) {
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = Math.floor(sec % 60);
+      return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    setInterval(() => {
+      const liveClock = document.getElementById('liveClock');
+      if (liveClock) liveClock.textContent = new Date().toLocaleTimeString();
+
+      [1, 2].forEach(pId => {
+        const p = state.plants[pId];
+        if (!p || !p.selectedPlantId) return;
+        if (!p.isPumping) {
+          p.countdownSec = Math.max(0, p.countdownSec - (1 * state.timeScale));
+          if (p.countdownSec <= 0) {
+            triggerWatering(pId, null, 'Scheduled Auto Cycle');
+          }
+          const cdEl = document.getElementById(`countdown${pId}`);
+          if (cdEl) cdEl.textContent = formatHMS(p.countdownSec);
+          const pct = Math.min(100, Math.max(0, Math.round(((p.intervalTotalSec - p.countdownSec) / p.intervalTotalSec) * 100)));
+          const cdBar = document.getElementById(`countdownBar${pId}`);
+          if (cdBar) cdBar.style.width = `${pct}%`;
+        }
+      });
+    }, 1000);
+
+    // ========================================================================
+    // 8. WEATHER PRESETS & LIVE API
+    // ========================================================================
+    function setWeatherPreset(preset) {
+      state.weatherPreset = preset;
+      document.querySelectorAll('.weather-btn').forEach(b => {
+        const isActive = b.dataset.weather === preset;
+        b.classList.toggle('active', isActive);
+        b.classList.toggle('border-cyan-400/50', isActive);
+        b.classList.toggle('bg-cyan-950/40', isActive);
+        b.classList.toggle('text-cyan-300', isActive);
+      });
+
+      if (preset === 'humid') {
+        state.humidity = 84;
+        state.temperature = 21.0;
+        state.weatherDesc = 'Rainy • High Moisture';
+        state.stationName = 'Simulated Rain Station';
+      } else if (preset === 'normal') {
+        state.humidity = 52;
+        state.temperature = 24.5;
+        state.weatherDesc = 'Sunny • Moderate';
+        state.stationName = 'Simulated Normal Station';
+      } else if (preset === 'dry') {
+        state.humidity = 28;
+        state.temperature = 32.0;
+        state.weatherDesc = 'Arid • Hot & Dry';
+        state.stationName = 'Simulated Dry Station';
+      }
+      addLog(`🌤️ Weather preset switched to "${preset}" (${state.humidity}% RH)`, 'weather');
+      updateEnvironmentUI();
+    }
+
+    async function fetchLiveOpenMeteo(city = 'New Delhi') {
+      addLog(`🛰️ Querying Open-Meteo for live weather in ${city}...`, 'weather');
+      try {
+        const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`).then(r => r.json());
+        if (!geo.results || !geo.results.length) throw new Error('City not found');
+        const { latitude, longitude, name, country } = geo.results[0];
+
+        const w = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m`).then(r => r.json());
+        if (!w.current) throw new Error('Data unavailable');
+
+        state.temperature = w.current.temperature_2m;
+        state.humidity = w.current.relative_humidity_2m;
+        state.stationName = `${name}, ${country}`;
+        state.weatherDesc = `Live Sync &bull; ${state.temperature}°C`;
+
+        document.querySelectorAll('.weather-btn').forEach(b => b.classList.remove('active', 'border-cyan-400/50', 'bg-cyan-950/40', 'text-cyan-300'));
+        addLog(`🛰️ Live API Synced: ${name} (${state.humidity}% RH, ${state.temperature}°C)`, 'weather');
+        updateEnvironmentUI();
+      } catch(err) {
+        addLog(`⚠️ Open-Meteo offline or failed: ${err.message}. Using current preset.`, 'alert');
+      }
+    }
+
+    // ========================================================================
+    // 9. TELEMETRY LOGS
+    // ========================================================================
+    function addLog(msg, type = 'system') {
+      const time = new Date().toTimeString().split(' ')[0];
+      state.logs.unshift({ time, msg, type });
+
+      const container = document.getElementById('logsContainer');
+      const div = document.createElement('div');
+      
+      let borderCol = 'border-slate-700';
+      let textCol = 'text-slate-300';
+      if (type === 'p1') { borderCol = 'border-emerald-500'; textCol = 'text-emerald-300'; }
+      else if (type === 'p2') { borderCol = 'border-sky-500'; textCol = 'text-sky-300'; }
+      else if (type === 'weather') { borderCol = 'border-amber-500'; textCol = 'text-amber-300'; }
+      else if (type === 'alert') { borderCol = 'border-rose-500'; textCol = 'text-rose-300'; }
+
+      div.className = `p-2 rounded-lg bg-white/[0.02] border-l-2 ${borderCol} flex gap-2`;
+      div.innerHTML = `<span class="text-slate-500">[${time}]</span> <span class="${textCol}">${msg}</span>`;
+      container.prepend(div);
+
+      while (container.children.length > 60) container.removeChild(container.lastChild);
+    }
+
+    function clearLogs() {
+      state.logs = [];
+      document.getElementById('logsContainer').innerHTML = `
+        <div class="p-2 rounded-lg bg-white/[0.02] border-l-2 border-slate-700 text-slate-400">
+          Logs cleared.
+        </div>`;
+    }
+
+    function exportLogsToCSV() {
+      if (!state.logs.length) { alert('Logs are empty'); return; }
+      let csv = 'Timestamp,Type,Message\n';
+      state.logs.forEach(l => { csv += `"${l.time}","${l.type}","${l.msg.replace(/"/g, '""')}"\n`; });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hydropulse_telemetry_${Date.now()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ========================================================================
+    // 10. HARDWARE & MODE TOGGLES
+    // ========================================================================
+    function setMode(mode) {
+      state.mode = mode;
+      const isSim = mode === 'simulation';
+      document.getElementById('modeSimBtn').className = isSim 
+        ? 'px-4 py-2 rounded-xl text-xs font-bold transition-all border border-cyan-400/50 bg-cyan-950/60 text-cyan-300 shadow-glow-cyan'
+        : 'px-4 py-2 rounded-xl text-xs font-bold transition-all border border-white/10 bg-white/5 text-slate-300 hover:text-white';
+      
+      document.getElementById('modeHwBtn').className = !isSim 
+        ? 'px-4 py-2 rounded-xl text-xs font-bold transition-all border border-cyan-400/50 bg-cyan-950/60 text-cyan-300 shadow-glow-cyan'
+        : 'px-4 py-2 rounded-xl text-xs font-bold transition-all border border-white/10 bg-white/5 text-slate-300 hover:text-white';
+
+      const statusBadge = document.getElementById('headerStatusText');
+      if (statusBadge) statusBadge.textContent = isSim ? 'Simulated' : `ESP32 (${state.espIp})`;
+      addLog(`Hardware mode set to: ${mode.toUpperCase()}`, 'system');
+    }
+
+    async function testPingESP32() {
+      const ip = document.getElementById('espIpInput').value.trim();
+      state.espIp = ip;
+      const statusEl = document.getElementById('pingStatusText');
+      statusEl.textContent = 'Pinging...';
+      statusEl.style.color = '#38bdf8';
+      try {
+        const res = await fetch(`http://${ip}/status`, { signal: AbortSignal.timeout(2000) });
+        if (res.ok) {
+          statusEl.textContent = '✅ Connected (Status 200)';
+          statusEl.style.color = '#34d399';
+          addLog(`Ping successful to ESP32 at ${ip}`, 'system');
+        } else {
+          throw new Error(`HTTP ${res.status}`);
+        }
+      } catch(e) {
+        statusEl.textContent = '⚠️ Offline / Unreachable';
+        statusEl.style.color = '#f87171';
+        addLog(`Ping failed for ESP32 at ${ip}`, 'alert');
+      }
+    }
+
+    // ========================================================================
+    // 11. TABS & THEMES
+    // ========================================================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active-view'));
+      const target = document.getElementById('view-' + tabId);
+      if (target) target.classList.add('active-view');
+
+      ['dashboard', 'catalog', 'hardware', 'demo'].forEach(id => {
+        const dBtn = document.getElementById('tab-btn-' + id);
+        const mBtn = document.getElementById('mob-tab-btn-' + id);
+        const isActive = id === tabId;
+        [dBtn, mBtn].forEach(btn => {
+          if (btn) {
+            btn.classList.toggle('active', isActive);
+            btn.classList.toggle('text-slate-300', isActive);
+            btn.classList.toggle('text-slate-400', !isActive);
+          }
+        });
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function setTheme(themeName) {
+      document.documentElement.setAttribute('data-theme', themeName);
+      state.theme = themeName;
+      ['green', 'violet', 'inferno'].forEach(t => {
+        const btn = document.getElementById('theme-btn-' + t);
+        if (btn) {
+          const isActive = t === themeName;
+          btn.classList.toggle('active-theme', isActive);
+          if (isActive) {
+            btn.classList.remove('text-slate-400');
+            if (t === 'green') btn.classList.add('text-emerald-300');
+            else if (t === 'inferno') btn.classList.add('text-amber-200');
+            else btn.classList.add('text-slate-200');
+          } else {
+            btn.classList.remove('text-emerald-300', 'text-amber-200', 'text-slate-200');
+            btn.classList.add('text-slate-400');
+          }
+        }
+      });
+    }
+
+    // ========================================================================
+    // 12. RENDER CATALOG CARDS
+    // ========================================================================
+    function renderCatalogCards() {
+      const grid = document.getElementById('catalogCardsGrid');
+      grid.innerHTML = '';
+      PLANT_CATALOG.forEach(plant => {
+        const card = document.createElement('article');
+        card.className = 'glass-card rounded-3xl p-6 border flex flex-col justify-between group hover:border-emerald-400/60 transition-all';
+        card.style.borderColor = 'var(--card-border)';
+        card.innerHTML = `
+          <div class="space-y-4">
+            <!-- Plant Photo Showcase / Hover Frame -->
+            <div class="relative w-full h-48 rounded-2xl overflow-hidden bg-black/50 border-2 border-white/10 group-hover:border-emerald-400 shadow-lg transition-all duration-300">
+              <img src="${plant.image}" alt="${plant.name}" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" onerror="this.src='../${plant.image}'; this.onerror=null;" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
+              
+              <!-- Badge overlay -->
+              <div class="absolute top-2.5 left-2.5 px-3 py-1 rounded-xl bg-black/60 backdrop-blur-md border border-white/20 flex items-center gap-1.5 text-xs font-cartoon text-white shadow-md">
+                <span class="text-base">${plant.icon}</span>
+                <span>${plant.name.split(' ')[0]}</span>
+              </div>
+              
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-xl text-[10px] font-cartoon uppercase tracking-wide border shadow-md" style="background-color: var(--badge-bg); border-color: var(--tag-border); color: var(--accent-glow);">
+                ${plant.moistureProfile.replace(' Need', '')}
+              </div>
+            </div>
+
+            <!-- Title & Scientific Name -->
+            <div>
+              <h3 class="text-2xl font-cartoon tracking-wide text-white group-hover:text-amber-300 transition-colors">${plant.name}</h3>
+              <div class="text-xs font-sniglet text-slate-400 italic">${plant.scientificName}</div>
+            </div>
+
+            <p class="text-slate-300 text-xs leading-relaxed font-sans">${plant.description}</p>
+
+            <!-- Metrics Pills -->
+            <div class="grid grid-cols-2 gap-2 text-xs p-3 rounded-2xl bg-black/40 border border-white/10 font-cartoon">
+              <div class="flex justify-between items-center"><span class="text-slate-400">Burst:</span> <strong class="text-white">${plant.baseBurstSec}s</strong></div>
+              <div class="flex justify-between items-center"><span class="text-slate-400">Freq:</span> <strong class="text-white">${plant.baseFrequency}x/day</strong></div>
+              <div class="flex justify-between items-center"><span class="text-slate-400">Germinate:</span> <strong class="text-white">${plant.germinationDays}d</strong></div>
+              <div class="flex justify-between items-center"><span class="text-slate-400">Vegetative:</span> <strong class="text-white">${plant.vegetativeDays}d</strong></div>
+            </div>
+          </div>
+
+          <!-- Assign Buttons -->
+          <div class="pt-4 grid grid-cols-2 gap-2.5 border-t border-white/10 mt-4">
+            <button class="cartoon-btn py-2 text-xs font-cartoon text-white flex items-center justify-center gap-1.5" onclick="deployPlantToSlot('${plant.id}', 1)">
+              <span>🪴</span> Put in Plant 1
+            </button>
+            <button class="cartoon-btn py-2 text-xs font-cartoon text-white flex items-center justify-center gap-1.5" onclick="deployPlantToSlot('${plant.id}', 2)" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); border-color: #38bdf8; box-shadow: 0 3px 0 #0369a1;">
+              <span>🌿</span> Put in Plant 2
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function deployPlantToSlot(plantId, slotId) {
+      state.plants[slotId].selectedPlantId = plantId;
+      
+      const emptyEl = document.getElementById(`emptyState${slotId}`);
+      const activeEl = document.getElementById(`activeState${slotId}`);
+      if (emptyEl) emptyEl.classList.add('hidden');
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      const sched = computePlantSchedule(slotId);
+      state.plants[slotId].countdownSec = sched.intervalSec;
+      state.plants[slotId].intervalTotalSec = sched.intervalSec;
+      updatePlantUI(slotId);
+      addLog(`🌱 Plant ${slotId} configured as ${sched.plant.name}`, 'system');
+      switchTab('dashboard');
+    }
+
+    // ========================================================================
+    // 13. FIRMWARE CODE DISPLAY & COPY
+    // ========================================================================
+    const ESP32_SKETCH = `/*
+ * HydroPulse - ESP32 Dual-Plant Smart Irrigation Controller
+ * Microcontroller: ESP32 NodeMCU
+ * Relays: GPIO 32 (Pump 1) & GPIO 33 (Pump 2)
+ */
+
+#include <WiFi.h>
+#include <WebServer.h>
+
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+const int RELAY_PUMP1_PIN = 32;
+const int RELAY_PUMP2_PIN = 33;
+
+// Inverted logic: active LOW for standard optocoupler relays
+const int RELAY_ON  = LOW;
+const int RELAY_OFF = HIGH;
+
+WebServer server(80);
+
+void sendCORSHeaders() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
+void handleRoot() {
+  sendCORSHeaders();
+  String json = "{\\"status\\":\\"online\\",\\"device\\":\\"HydroPulse-ESP32\\",\\"p1_gpio\\":32,\\"p2_gpio\\":33}";
+  server.send(200, "application/json", json);
+}
+
+void handleWater() {
+  sendCORSHeaders();
+  if (!server.hasArg("pump") || !server.hasArg("duration")) {
+    server.send(400, "application/json", "{\\"error\\":\\"Missing pump or duration\\"}");
+    return;
+  }
+
+  int pump = server.arg("pump").toInt();
+  float durationSec = server.arg("duration").toFloat();
+  if (durationSec <= 0.1) durationSec = 0.5;
+  if (durationSec > 10.0) durationSec = 10.0;
+
+  int targetPin = (pump == 1) ? RELAY_PUMP1_PIN : RELAY_PUMP2_PIN;
+  Serial.printf("[TRIGGER] Pump %d on GPIO %d for %.2fs\\n", pump, targetPin, durationSec);
+
+  digitalWrite(targetPin, RELAY_ON);
+  delay((unsigned long)(durationSec * 1000));
+  digitalWrite(targetPin, RELAY_OFF);
+
+  server.send(200, "application/json", "{\\"status\\":\\"success\\"}");
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(RELAY_PUMP1_PIN, OUTPUT);
+  pinMode(RELAY_PUMP2_PIN, OUTPUT);
+  digitalWrite(RELAY_PUMP1_PIN, RELAY_OFF);
+  digitalWrite(RELAY_PUMP2_PIN, RELAY_OFF);
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  int attempts = 0;
+  while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+    delay(500); Serial.print("."); attempts++;
+  }
+
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\\nConnected! IP: " + WiFi.localIP().toString());
+  } else {
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP("HydroPulse-AP", "12345678");
+    Serial.println("\\nSoftAP IP: " + WiFi.softAPIP().toString());
+  }
+
+  server.on("/", handleRoot);
+  server.on("/status", handleRoot);
+  server.on("/water", handleWater);
+  server.begin();
+  Serial.println("HydroPulse HTTP Server Started on Port 80.");
+}
+
+void loop() {
+  server.handleClient();
+}`;
+
+    function copyFirmwareCode() {
+      navigator.clipboard.writeText(ESP32_SKETCH).then(() => {
+        const btn = document.getElementById('copySketchBtn');
+        btn.textContent = '✅ Copied to Clipboard!';
+        setTimeout(() => btn.textContent = '📋 Copy Sketch Code', 2000);
+      });
+    }
+
+    // ========================================================================
+    // 14. INITIALIZATION
+    // ========================================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      renderModalPlantList();
+      renderCatalogCards();
+      updateEnvironmentUI();
+      
+      const sketchEl = document.getElementById('sketchCodeText');
+      if (sketchEl) sketchEl.textContent = ESP32_SKETCH;
+
+      addLog('🌱 HydroPulse System Initialized. Click "+" on Plant 1 or Plant 2 to choose an herb variety.', 'system');
+
+      // Inject Card Shine effect
+      document.querySelectorAll('.glass-card').forEach((card, index) => {
+        if (!card.querySelector('.card-shine-container')) {
+          const shineContainer = document.createElement('div');
+          shineContainer.className = 'card-shine-container';
+          shineContainer.innerHTML = `<div class="card-shine" style="animation-delay: ${index * 0.15}s"></div>`;
+          card.appendChild(shineContainer);
+        }
+      });
+    });
+  </script>
+
+  <!-- FLAME CURSOR SCRIPT -->
+  <script>
+    (function initFlameCursor() {
+      const wrapper = document.getElementById('flame-cursor-wrapper');
+      const canvas = document.getElementById('flame-canvas-particles');
+      const clickRing = document.getElementById('flame-click-ring');
+      if (!wrapper || !canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      canvas.width = 160;
+      canvas.height = 160;
+
+      let mouseX = -100, mouseY = -100, currentX = -100, currentY = -100;
+      let isVisible = false;
+      const particles = [];
+      const maxParticles = 32;
+
+      function getThemeColors() {
+        const theme = document.documentElement.getAttribute('data-theme') || 'green';
+        if (theme === 'green') return ['#10b981', '#4ade80', '#22c55e', '#facc15', '#a3e635'];
+        if (theme === 'inferno') return ['#ff4d26', '#ff9800', '#ff3333', '#fde047'];
+        return ['#8B5CF6', '#00e5ff', '#a855f7', '#c4b5fd'];
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        if (!isVisible) {
+          isVisible = true; wrapper.style.display = 'block';
+          currentX = mouseX; currentY = mouseY;
+        }
+      });
+
+      window.addEventListener('mouseleave', () => {
+        isVisible = false; wrapper.style.display = 'none';
+      });
+
+      const interactiveSelector = 'button, a, input, select, .glass-card, .nav-tab-btn, .theme-toggle-btn';
+      document.addEventListener('mouseover', (e) => {
+        if (e.target && e.target.closest && e.target.closest(interactiveSelector)) {
+          wrapper.classList.add('cursor-hover');
+        }
+      });
+      document.addEventListener('mouseout', (e) => {
+        if (e.target && e.target.closest && e.target.closest(interactiveSelector)) {
+          wrapper.classList.remove('cursor-hover');
+        }
+      });
+
+      window.addEventListener('mousedown', () => {
+        if (clickRing) {
+          wrapper.classList.remove('burst-active');
+          void clickRing.offsetWidth;
+          wrapper.classList.add('burst-active');
+          setTimeout(() => wrapper.classList.remove('burst-active'), 300);
+        }
+        const colors = getThemeColors();
+        for (let i = 0; i < 8; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 2.5 + 1.2;
+          particles.push({
+            x: 80, y: 80,
+            vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 1,
+            size: Math.random() * 3.5 + 1.5, alpha: 1,
+            color: colors[Math.floor(Math.random() * colors.length)]
+          });
+        }
+      });
+
+      function spawnParticle() {
+        if (particles.length < maxParticles && isVisible) {
+          const colors = getThemeColors();
+          const angle = (Math.random() - 0.5) * 1.5;
+          particles.push({
+            x: 80 + (Math.random() - 0.5) * 8, y: 80 + (Math.random() - 0.5) * 8,
+            vx: Math.sin(angle) * 0.8, vy: -(Math.random() * 1.8 + 0.8),
+            size: Math.random() * 2.8 + 1, alpha: 0.9,
+            color: colors[Math.floor(Math.random() * colors.length)]
+          });
+        }
+      }
+
+      function renderLoop() {
+        currentX += (mouseX - currentX) * 0.35;
+        currentY += (mouseY - currentY) * 0.35;
+        wrapper.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        spawnParticle();
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx; p.y += p.vy;
+          p.alpha -= 0.025; p.size *= 0.96;
+
+          if (p.alpha <= 0 || p.size <= 0.2) {
+            particles.splice(i, 1);
+            continue;
+          }
+
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, p.alpha);
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        requestAnimationFrame(renderLoop);
+      }
+      requestAnimationFrame(renderLoop);
+    })();
+  </script>
+
+  <!-- AMBIENT INTERACTIVE CANVAS SCRIPT (3D Polyhedra & Repelling Constellation) -->
+  <script>
+    (function initAmbientEngine() {
+      const canvas = document.getElementById('ambient-interactive-bg');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+      let mouse = { x: -1000, y: -1000, radius: 180 };
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+      window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+      window.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+
+      function getPalette() {
+        const t = document.documentElement.getAttribute('data-theme') || 'green';
+        if (t === 'green') return { primary: '34, 197, 94', secondary: '74, 222, 128', accent: '250, 204, 21', lineAlpha: 0.18, nodeAlpha: 0.45 };
+        if (t === 'inferno') return { primary: '255, 77, 38', secondary: '255, 152, 0', accent: '254, 224, 71', lineAlpha: 0.16, nodeAlpha: 0.45 };
+        return { primary: '139, 92, 246', secondary: '0, 229, 255', accent: '232, 121, 249', lineAlpha: 0.18, nodeAlpha: 0.42 };
+      }
+
+      const nodeCount = Math.min(50, Math.floor((width * height) / 26000));
+      const nodes = [];
+      for (let i = 0; i < nodeCount; i++) {
+        nodes.push({
+          x: Math.random() * width, y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.45, vy: (Math.random() - 0.5) * 0.45,
+          baseRadius: Math.random() * 2 + 1.2, ox: 0, oy: 0
+        });
+      }
+
+      const polyhedra = [
+        {
+          cx: width * 0.12, cy: height * 0.35, r: 40,
+          rotX: 0, rotY: 0, rotZ: 0, vRotX: 0.003, vRotY: 0.005, vRotZ: 0.002,
+          nodes: [[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]],
+          edges: [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]]
+        },
+        {
+          cx: width * 0.88, cy: height * 0.65, r: 46,
+          rotX: 0.5, rotY: 0.8, rotZ: 0.2, vRotX: -0.004, vRotY: 0.003, vRotZ: 0.003,
+          nodes: [[0,1.4,0],[1.2,0,0],[0,0,1.2],[-1.2,0,0],[0,0,-1.2],[0,-1.4,0]],
+          edges: [[0,1],[0,2],[0,3],[0,4],[5,1],[5,2],[5,3],[5,4],[1,2],[2,3],[3,4],[4,1]]
+        }
+      ];
+
+      function drawPoly(p, palette) {
+        p.rotX += p.vRotX; p.rotY += p.vRotY; p.rotZ += p.vRotZ;
+        const radX = Math.cos(p.rotX), sinX = Math.sin(p.rotX);
+        const radY = Math.cos(p.rotY), sinY = Math.sin(p.rotY);
+        const radZ = Math.cos(p.rotZ), sinZ = Math.sin(p.rotZ);
+        const projected = p.nodes.map(n => {
+          let x = n[0], y = n[1], z = n[2];
+          let y1 = y * radX - z * sinX, z1 = y * sinX + z * radX;
+          let x2 = x * radY + z1 * sinY, z2 = -x * sinY + z1 * radY;
+          let x3 = x2 * radZ - y1 * sinZ, y3 = x2 * sinZ + y1 * radZ;
+          const scale = 1.4 / (2.2 + z2 * 0.35);
+          return { x: p.cx + x3 * p.r * scale, y: p.cy + y3 * p.r * scale };
+        });
+
+        ctx.strokeStyle = `rgba(${palette.secondary}, ${palette.lineAlpha * 1.5})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        p.edges.forEach(([i1, i2]) => {
+          ctx.moveTo(projected[i1].x, projected[i1].y);
+          ctx.lineTo(projected[i2].x, projected[i2].y);
+        });
+        ctx.stroke();
+
+        projected.forEach(pt => {
+          ctx.fillStyle = `rgba(${palette.accent}, ${palette.nodeAlpha * 1.2})`;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        const palette = getPalette();
+        polyhedra[0].cx = width * 0.12; polyhedra[0].cy = height * 0.35;
+        polyhedra[1].cx = width * 0.88; polyhedra[1].cy = height * 0.68;
+        polyhedra.forEach(poly => drawPoly(poly, palette));
+
+        for (let i = 0; i < nodes.length; i++) {
+          const n = nodes[i];
+          n.x += n.vx; n.y += n.vy;
+          if (n.x < 0) n.x = width; else if (n.x > width) n.x = 0;
+          if (n.y < 0) n.y = height; else if (n.y > height) n.y = 0;
+
+          const dx = mouse.x - n.x, dy = mouse.y - n.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < mouse.radius && dist > 0) {
+            const force = (1 - dist / mouse.radius) * 16;
+            const angle = Math.atan2(dy, dx);
+            n.ox -= Math.cos(angle) * force * 0.12;
+            n.oy -= Math.sin(angle) * force * 0.12;
+          }
+          n.ox *= 0.9; n.oy *= 0.9;
+          const drawX = n.x + n.ox; const drawY = n.y + n.oy;
+
+          ctx.fillStyle = `rgba(${palette.primary}, ${palette.nodeAlpha})`;
+          ctx.beginPath();
+          ctx.arc(drawX, drawY, n.baseRadius, 0, Math.PI * 2);
+          ctx.fill();
+
+          for (let j = i + 1; j < nodes.length; j++) {
+            const n2 = nodes[j];
+            const dX = (n.x + n.ox) - (n2.x + n2.ox);
+            const dY = (n.y + n.oy) - (n2.y + n2.oy);
+            const nodeDist = Math.hypot(dX, dY);
+            if (nodeDist < 140) {
+              const alpha = (1 - nodeDist / 140) * palette.lineAlpha;
+              ctx.strokeStyle = `rgba(${palette.secondary}, ${alpha})`;
+              ctx.lineWidth = 0.8;
+              ctx.beginPath();
+              ctx.moveTo(drawX, drawY);
+              ctx.lineTo(n2.x + n2.ox, n2.y + n2.oy);
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+  </script>
+
+  <!-- COSMIC WARP SCRIPT -->
+  <script>
+    (function initCosmicWarp() {
+      const canvas = document.getElementById('cosmic-warp-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = window.innerWidth, height = window.innerHeight;
+      let cx = width / 2, cy = height / 2;
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        cx = width / 2; cy = height / 2;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      function getWarpColors() {
+        const t = document.documentElement.getAttribute('data-theme') || 'green';
+        if (t === 'green') return ['#4ade80', '#22c55e', '#a3e635', '#facc15', '#ffffff'];
+        if (t === 'inferno') return ['#ff9800', '#ff5722', '#fde047', '#ff3333', '#ffffff'];
+        return ['#00e5ff', '#38bdf8', '#a855f7', '#ffffff'];
+      }
+      const stars = [];
+      const starCount = 120;
+
+      function makeStar(initialDist) {
+        const colors = getWarpColors();
+        const angle = Math.random() * Math.PI * 2;
+        const d = initialDist !== undefined ? initialDist : (Math.random() * 30 + 10);
+        return {
+          x: Math.cos(angle) * d, y: Math.sin(angle) * d,
+          px: Math.cos(angle) * d, py: Math.sin(angle) * d,
+          speed: Math.random() * 4 + 3, accel: 1.03,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          width: Math.random() * 1.8 + 0.8, tailLen: Math.random() * 18 + 14
+        };
+      }
+
+      for (let i = 0; i < starCount; i++) {
+        stars.push(makeStar(Math.random() * Math.max(width, height) * 0.6));
+      }
+
+      function tick() {
+        ctx.fillStyle = 'rgba(7, 7, 14, 0.28)';
+        ctx.fillRect(0, 0, width, height);
+
+        const maxDist = Math.sqrt(cx * cx + cy * cy) * 1.1;
+        for (let j = 0; j < stars.length; j++) {
+          const s = stars[j];
+          s.px = s.x; s.py = s.y;
+          const hyp = Math.hypot(s.x, s.y) || 1;
+          s.x += (s.x / hyp) * s.speed;
+          s.y += (s.y / hyp) * s.speed;
+          s.speed *= s.accel;
+
+          const d = Math.hypot(s.x, s.y);
+          if (d > maxDist || isNaN(d)) {
+            stars[j] = makeStar();
+            continue;
+          }
+
+          const ratio = Math.min(d / maxDist, 1);
+          const streak = s.tailLen * (1 + ratio * 3);
+          const prevX = s.x - (s.x / d) * streak;
+          const prevY = s.y - (s.y / d) * streak;
+
+          const grad = ctx.createLinearGradient(cx + prevX, cy + prevY, cx + s.x, cy + s.y);
+          grad.addColorStop(0, 'rgba(0,0,0,0)');
+          grad.addColorStop(0.5, s.color);
+          grad.addColorStop(1, '#ffffff');
+
+          ctx.save();
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = s.width * (0.6 + ratio * 1.4);
+          ctx.lineCap = 'round';
+          ctx.globalAlpha = Math.min(ratio * 1.5, 0.8);
+          ctx.beginPath();
+          ctx.moveTo(cx + prevX, cy + prevY);
+          ctx.lineTo(cx + s.x, cy + s.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+  </script>
+</body>
+</html>
